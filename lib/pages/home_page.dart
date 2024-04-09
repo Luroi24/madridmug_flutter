@@ -20,7 +20,8 @@ class _HomePageState extends State<HomePage> {
           Expanded(
             flex: 2,
             child: Container(
-              color: Colors.amber,
+              alignment: Alignment.center,
+              color: Colors.yellow,
               child: Text("Test"),
             )
           ),
@@ -29,7 +30,9 @@ class _HomePageState extends State<HomePage> {
           Expanded(
             flex: 5,
             child: Container(
+              alignment: Alignment.center,
               color: Colors.red,
+              child: Text("Popular cards"),
             )
           ),
           
@@ -37,7 +40,9 @@ class _HomePageState extends State<HomePage> {
           Expanded(
             flex: 3,
             child: Container(
+              alignment: Alignment.center,
               color: Colors.blue,
+              child: Text("Nearby cards"),
             )
           )
         ],
