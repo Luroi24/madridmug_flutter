@@ -1,5 +1,8 @@
+// ignore_for_file: prefer_const_constructors
+
 import 'package:flutter/material.dart';
 import 'package:madridmug_flutter/pages/counter_page.dart';
+import 'package:madridmug_flutter/pages/menu_page.dart';
 import 'package:madridmug_flutter/pages/todo_page.dart';
 
 void main() {
@@ -13,7 +16,11 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: ToDoPage(),
+      theme: ThemeData(
+        primarySwatch: Colors.yellow,
+        primaryColor: Colors.yellow,
+      ),
+      home: MenuPage(),
     );
   }
 }
