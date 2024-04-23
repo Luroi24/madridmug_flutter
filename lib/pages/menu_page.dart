@@ -13,6 +13,8 @@ import 'package:path_provider/path_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:geocoding/geocoding.dart';
 
+import '../db/database_helper.dart';
+
 class MenuPage extends StatefulWidget {
   MenuPage({super.key});
 
@@ -22,6 +24,7 @@ class MenuPage extends StatefulWidget {
 
 class _MenuPageState extends State<MenuPage> {
   StreamSubscription<Position>? _positionStreamSubscription;
+  DatabaseHelper db = DatabaseHelper.instance;
   final _uidController = TextEditingController();
   final _ageController = TextEditingController();
   final logger = Logger();
@@ -182,6 +185,13 @@ class _MenuPageState extends State<MenuPage> {
         writePositionToFile(position);
       },
     );
+
+    _positionStreamSubscription = Geolocator.getPositionStream(locationSettings: locationSettings).listen(
+          (Position position) {
+        db.insertCoordinate(position);
+      },
+    );
+
   }
 
   void stopTracking() {
@@ -211,4 +221,7 @@ class _MenuPageState extends State<MenuPage> {
     _ageController.dispose();
     super.dispose();
   }
+
+
+
 }
