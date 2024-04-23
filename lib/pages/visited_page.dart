@@ -38,7 +38,7 @@ class _VisitedPageState extends State<VisitedPage> {
           var formattedDate = DateFormat('yyyy/MM/dd HH:mm:ss').format(DateTime.fromMillisecondsSinceEpoch(int.parse(coord[0])));
           return ListTile(
             title: Text('Timestamp: $formattedDate'),
-            subtitle: Text('Latitude: ${coord[1]}, Longitude: ${coord[2]}'),
+            subtitle: Text('${coord[1]}\nLatitude: ${coord[2]}, Longitude: ${coord[3]}'),
           );
         },
       ),

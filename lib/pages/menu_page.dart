@@ -1,6 +1,7 @@
 // ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables, prefer_const_constructors_in_immutables
 
 import 'package:flutter/material.dart';
+import 'package:logger/logger.dart';
 import 'package:madridmug_flutter/pages/home_page.dart';
 import 'package:madridmug_flutter/pages/map_page.dart';
 import 'package:madridmug_flutter/pages/profile.dart';
@@ -10,6 +11,7 @@ import 'dart:async';
 import 'package:geolocator/geolocator.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:geocoding/geocoding.dart';
 
 class MenuPage extends StatefulWidget {
   MenuPage({super.key});
@@ -20,12 +22,19 @@ class MenuPage extends StatefulWidget {
 
 class _MenuPageState extends State<MenuPage> {
   StreamSubscription<Position>? _positionStreamSubscription;
-  final List _pages = [
-    HomePage(),
-    MapPage(),
-    VisitedPage(),
-    ProfilePage(),
-  ];
+  final _uidController = TextEditingController();
+  final _ageController = TextEditingController();
+  final logger = Logger();
+
+  String _streetName = "Not set yet";
+
+  void changeStreet(String? newStreet){
+    if(newStreet!=null){
+      setState(() {
+        _streetName = newStreet;
+      });
+    }
+  }
 
   // Keep track of index
   int _selectedIndex = 0;
@@ -38,8 +47,69 @@ class _MenuPageState extends State<MenuPage> {
   }
 
   @override
+  void initState() {
+    super.initState();
+  }
+
+  Future<void> _loadPrefs() async {
+    final prefs = await SharedPreferences.getInstance();
+    String? uid = prefs.getString('username');
+    String? age = prefs.getString('age');
+
+    if (uid == null || age == null) {
+      _showInputDialog();
+    } else {
+    }
+  }
+
+  Future<void> _showInputDialog() async {
+    return showDialog<void>(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Enter username and age'),
+          content: SingleChildScrollView(
+            child: ListBody(
+              children: <Widget>[
+                TextField(
+                  controller: _uidController,
+                  decoration: InputDecoration(hintText: "Username"),
+                ),
+                TextField(
+                  controller: _ageController,
+                  decoration: InputDecoration(hintText: "Age"),
+                ),
+              ],
+            ),
+          ),
+          actions: <Widget>[
+            TextButton(
+              child: Text('Save'),
+              onPressed: () async {
+                final prefs = await SharedPreferences.getInstance();
+                await prefs.setString('username', _uidController.text);
+                await prefs.setString('age', _ageController.text);
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  @override
   Widget build(BuildContext context) {
     startTracking();
+    _loadPrefs();
+
+    final List _pages = [
+    HomePage(streetName: _streetName,),
+    MapPage(),
+    VisitedPage(),
+    ProfilePage(),
+  ];
 
     return Scaffold(
       body: _pages[_selectedIndex],
@@ -113,8 +183,18 @@ class _MenuPageState extends State<MenuPage> {
     final directory = await getApplicationDocumentsDirectory();
     final file = File('${directory.path}/gps_coordinates.csv');
     String timestamp = DateTime.now().millisecondsSinceEpoch.toString();
+    List<Placemark> placemarks = await placemarkFromCoordinates(position.latitude,position.longitude);
+    logger.d("Lugares encontrados: ${placemarks[0].street}");
+    changeStreet(placemarks[0].street);
     await file.writeAsString(
-        '${timestamp};${position.latitude};${position.longitude}\n',
+        '$timestamp;${placemarks[0].street};${position.latitude};${position.longitude}\n',
         mode: FileMode.append);
+  }
+  
+  @override
+  void dispose(){
+    _uidController.dispose();
+    _ageController.dispose();
+    super.dispose();
   }
 }

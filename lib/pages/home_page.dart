@@ -2,14 +2,10 @@
 
 import 'package:flutter/material.dart';
 
-class HomePage extends StatefulWidget {
-  const HomePage({super.key});
+class HomePage extends StatelessWidget {
+  final String streetName;
+  const HomePage({super.key, required this.streetName});
 
-  @override
-  State<HomePage> createState() => _HomePageState();
-}
-
-class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -22,7 +18,7 @@ class _HomePageState extends State<HomePage> {
             child: Container(
               alignment: Alignment.center,
               color: Colors.yellow,
-              child: Text("Test"),
+              child: Text("You're currently at ... $streetName"),
             )
           ),
 
