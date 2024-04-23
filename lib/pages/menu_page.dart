@@ -3,7 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
 import 'package:madridmug_flutter/pages/home_page.dart';
-import 'package:madridmug_flutter/pages/map_page.dart';
+import 'package:madridmug_flutter/pages/map_screen.dart';
 import 'package:madridmug_flutter/pages/profile.dart';
 import 'package:madridmug_flutter/pages/visited_page.dart';
 import 'dart:io';
@@ -26,6 +26,8 @@ class _MenuPageState extends State<MenuPage> {
   final _ageController = TextEditingController();
   final logger = Logger();
 
+  double _newLatitude = 0;
+  double _newLongitude = 0;
   String _streetName = "Not set yet";
 
   void changeStreet(String? newStreet){
@@ -34,6 +36,13 @@ class _MenuPageState extends State<MenuPage> {
         _streetName = newStreet;
       });
     }
+  }
+
+  void changeCoordinates(double latitude, double longitude){
+    setState(() {
+      _newLatitude = latitude;
+      _newLongitude = longitude;
+    });
   }
 
   // Keep track of index
@@ -102,17 +111,18 @@ class _MenuPageState extends State<MenuPage> {
   @override
   Widget build(BuildContext context) {
     startTracking();
+    stopTracking();
     _loadPrefs();
 
-    final List _pages = [
+    final List pages = [
     HomePage(streetName: _streetName,),
-    MapPage(),
+    MapScreen(latitude: _newLatitude,longitude: _newLongitude,),
     VisitedPage(),
     ProfilePage(),
   ];
 
     return Scaffold(
-      body: _pages[_selectedIndex],
+      body: pages[_selectedIndex],
       bottomNavigationBar: BottomNavigationBar(
         type: BottomNavigationBarType.fixed,
         currentIndex: _selectedIndex,
@@ -183,12 +193,16 @@ class _MenuPageState extends State<MenuPage> {
     final directory = await getApplicationDocumentsDirectory();
     final file = File('${directory.path}/gps_coordinates.csv');
     String timestamp = DateTime.now().millisecondsSinceEpoch.toString();
-    List<Placemark> placemarks = await placemarkFromCoordinates(position.latitude,position.longitude);
-    logger.d("Lugares encontrados: ${placemarks[0].street}");
-    changeStreet(placemarks[0].street);
-    await file.writeAsString(
-        '$timestamp;${placemarks[0].street};${position.latitude};${position.longitude}\n',
-        mode: FileMode.append);
+    try{
+      List<Placemark> placemarks = await placemarkFromCoordinates(position.latitude,position.longitude);
+      logger.d("Lugares encontrados: ${placemarks[0].street}");
+      changeStreet(placemarks[0].street);
+      await file.writeAsString(
+          '$timestamp;${placemarks[0].street};${position.latitude};${position.longitude}\n',
+          mode: FileMode.append);
+    }on Exception catch(_){
+      rethrow;
+    }
   }
   
   @override
