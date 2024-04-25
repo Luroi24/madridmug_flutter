@@ -34,7 +34,7 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.yellow,
         primaryColor: Colors.yellow,
       ),
-      home: MenuPage(),
+      home: CounterPage(),
     );
   }
 }
