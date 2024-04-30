@@ -1,24 +1,28 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:madridmug_flutter/pages/register_page.dart';
-class LoginScreen extends StatefulWidget {
+import 'package:madridmug_flutter/pages/menu_page.dart';
+class SignUpScreen extends StatefulWidget {
   @override
-  _LoginScreenState createState() => _LoginScreenState();
+  _SignUpScreen createState() => _SignUpScreen();
 }
-class _LoginScreenState extends State<LoginScreen> {
+class _SignUpScreen extends State<SignUpScreen> {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
-  void _signInWithEmailAndPassword() async {
+  void _signUpWithEmailAndPassword() async {
     try {
-      final User? user = (await _auth.signInWithEmailAndPassword(
+      final User? user = (await _auth.createUserWithEmailAndPassword(
         email: emailController.text,
         password: passwordController.text,
       )).user;
       if (user != null) {
-        print('Login successful!');
+        print('Register successful!');
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => MenuPage()),
+        );
       } else {
-        print('Login failed!');
+        print('Register failed!');
       }
     } on FirebaseAuthException catch (e) {
       print(e); // Handle the error
@@ -27,7 +31,7 @@ class _LoginScreenState extends State<LoginScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text("Iniciar sesión")),
+      appBar: AppBar(title: Text("Registrar usuario")),
       body: Column(
         children: <Widget>[
           TextField(
@@ -40,16 +44,7 @@ class _LoginScreenState extends State<LoginScreen> {
             obscureText: true,
           ),
           ElevatedButton(
-            onPressed: _signInWithEmailAndPassword,
-            child: Text('Login'),
-          ),
-          ElevatedButton(
-            onPressed: (){
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => SignUpScreen()),
-              );
-            },
+            onPressed: _signUpWithEmailAndPassword,
             child: Text('Register'),
           ),
         ],

@@ -51,6 +51,7 @@ class MyApp extends StatelessWidget {
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.active) {
             if (snapshot.data != null) {
+
               return MenuPage(); // Usuario está logueado
             }
             return LoginScreen(); // Usuario no está logueado
