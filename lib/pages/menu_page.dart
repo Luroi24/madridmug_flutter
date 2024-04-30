@@ -29,8 +29,8 @@ class _MenuPageState extends State<MenuPage> {
   final _ageController = TextEditingController();
   final logger = Logger();
 
-  double _newLatitude = 0;
-  double _newLongitude = 0;
+  double _newLatitude = 40.407447684737356;
+  double _newLongitude = -3.6152570335947654;
   String _streetName = "Not set yet";
 
   void changeStreet(String? newStreet){
