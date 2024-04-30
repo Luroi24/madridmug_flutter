@@ -182,6 +182,7 @@ class _MenuPageState extends State<MenuPage> {
     _positionStreamSubscription =
         Geolocator.getPositionStream(locationSettings: locationSettings).listen(
       (Position position) {
+        changeCoordinates(position.latitude,position.longitude);
         writePositionToFile(position);
       },
     );

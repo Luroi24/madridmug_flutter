@@ -34,7 +34,7 @@ class _MapScreenState extends State<MapScreen> {
           openStreetMapTileLayer,
           MarkerLayer(markers: [
             Marker(
-                point: LatLng(40.38923590951672, -3.627749768768932),
+                point: LatLng(widget.latitude,widget.longitude),
                 width: 80,
                 height: 80,
                 child: Stack(
