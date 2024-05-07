@@ -1,6 +1,7 @@
 // ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
 
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 
 class HomePage extends StatelessWidget {
   final String streetName;
@@ -16,15 +17,41 @@ class HomePage extends StatelessWidget {
           Expanded(
             flex: 2,
             child: Container(
-              alignment: Alignment.center,
+              padding: EdgeInsets.only(left: 30),
               color: Colors.yellow,
-              child: Text("You're currently at ... $streetName"),
+              child: Row(
+                children: [
+                  Expanded(
+                    flex: 2,
+                    child: Column(
+                      children: [
+                        Expanded(
+                          flex: 1,
+                          child: Container(
+                            alignment: Alignment.bottomLeft,
+                            child: Text("Explore"),
+                          ),
+                        ),
+                        Expanded(
+                          flex: 1,
+                          child: Container(
+                            alignment: Alignment.topLeft,
+                            child: Text(streetName, style: TextStyle(fontSize: 24),),
+                        )),
+                      ],
+                    ),
+                  ),
+                  Expanded(
+                    flex: 1,
+                    child: Text("You're currently at ... $streetName")),
+                ],
+              ),
             )
           ),
 
           // Cards - Popular places
           Expanded(
-            flex: 5,
+            flex: 4,
             child: Container(
               alignment: Alignment.center,
               color: Colors.red,
@@ -39,6 +66,15 @@ class HomePage extends StatelessWidget {
               alignment: Alignment.center,
               color: Colors.blue,
               child: Text("Nearby cards"),
+            )
+          ),
+          Expanded(
+            flex: 4,
+            child: Container(
+              padding: EdgeInsets.only(bottom: 80),
+              alignment: Alignment.bottomCenter,
+              color: Colors.green,
+              child: Text("Developed by DarKbYte & Luroi"),
             )
           )
         ],

@@ -18,7 +18,6 @@ class _MapScreenState extends State<MapScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('Map View')),
       body: content(),
     );
   }
@@ -42,19 +41,7 @@ class _MapScreenState extends State<MapScreen> {
                     Icon(
                       Icons.location_pin,
                       size: 60,
-                      color: Colors.yellow,
-                    ),
-                    Positioned(
-                      bottom: 0,
-                      left: 0,
-                      right: 0,
-                      child: Container(
-                        color: Colors.white,
-                        child: Text(
-                          'You are here!',
-                          textAlign: TextAlign.center,
-                        ),
-                      ),
+                      color: Colors.brown[400],
                     ),
                   ],
                 )),
