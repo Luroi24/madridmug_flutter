@@ -33,15 +33,15 @@ class _MenuPageState extends State<MenuPage> {
   double _newLongitude = -3.6152570335947654;
   String _streetName = "Not set yet";
 
-  void changeStreet(String? newStreet){
-    if(newStreet!=null){
+  void changeStreet(String? newStreet) {
+    if (newStreet != null) {
       setState(() {
         _streetName = newStreet;
       });
     }
   }
 
-  void changeCoordinates(double latitude, double longitude){
+  void changeCoordinates(double latitude, double longitude) {
     setState(() {
       _newLatitude = latitude;
       _newLongitude = longitude;
@@ -70,8 +70,7 @@ class _MenuPageState extends State<MenuPage> {
 
     if (uid == null || age == null) {
       _showInputDialog();
-    } else {
-    }
+    } else {}
   }
 
   Future<void> _showInputDialog() async {
@@ -117,45 +116,79 @@ class _MenuPageState extends State<MenuPage> {
     stopTracking();
     _loadPrefs();
 
+    double _borderSize = 20;
+
     final List pages = [
-    HomePage(streetName: _streetName,),
-    MapScreen(latitude: _newLatitude,longitude: _newLongitude,),
-    VisitedPage(),
-    ProfilePage(),
-  ];
+      HomePage(
+        streetName: _streetName,
+      ),
+      MapScreen(
+        latitude: _newLatitude,
+        longitude: _newLongitude,
+      ),
+      VisitedPage(),
+      ProfilePage(),
+    ];
 
     return Scaffold(
       body: pages[_selectedIndex],
-      bottomNavigationBar: BottomNavigationBar(
-        type: BottomNavigationBarType.fixed,
-        currentIndex: _selectedIndex,
-        onTap: _bottomNavSelected,
-        /* decoration: BoxDecoration( 
+      extendBody: true,
+      bottomNavigationBar: Container(
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.only(
+              topRight: Radius.circular(_borderSize), topLeft: Radius.circular(_borderSize)),
+          boxShadow: [
+            BoxShadow(color: Colors.black38, spreadRadius: 0, blurRadius: 10),
+          ],
+        ),
+        child: ClipRRect(
+          borderRadius: BorderRadius.only(
+            topLeft: Radius.circular(_borderSize),
+            topRight: Radius.circular(_borderSize),
+          ),
+          child: BottomNavigationBar(
+            unselectedItemColor: Theme.of(context).primaryColor,
+            unselectedLabelStyle: TextStyle(color: Color(0xff806917)),
+            type: BottomNavigationBarType.fixed,
+            currentIndex: _selectedIndex,
+            onTap: _bottomNavSelected,
+            /* decoration: BoxDecoration( 
           color: Theme.of(context).primaryColor, 
           borderRadius: const BorderRadius.only( 
             topLeft: Radius.circular(20), 
             topRight: Radius.circular(20), 
           ), 
         ),  */
-        items: [
-          // Home button
-          BottomNavigationBarItem(
-            icon: Icon(
-              Icons.home_filled,
-            ),
-            label: "Home",
+            items: [
+              // Home button
+              BottomNavigationBarItem(
+                activeIcon: Icon(Icons.home_filled),
+                icon: Icon(
+                  Icons.home_outlined,
+                ),
+                label: "Home",
+              ),
+
+              // Map button
+              BottomNavigationBarItem(
+                  activeIcon: Icon(Icons.map),
+                  icon: Icon(Icons.map_outlined),
+                  label: "Map"),
+
+              // Visited button
+              BottomNavigationBarItem(
+                  activeIcon: Icon(Icons.favorite),
+                  icon: Icon(Icons.favorite_border),
+                  label: "Visited"),
+
+              // Profile button
+              BottomNavigationBarItem(
+                  activeIcon: Icon(Icons.person),
+                  icon: Icon(Icons.person_outline),
+                  label: "Profile"),
+            ],
           ),
-
-          // Map button
-          BottomNavigationBarItem(icon: Icon(Icons.map), label: "Map"),
-
-          // Visited button
-          BottomNavigationBarItem(
-              icon: Icon(Icons.heart_broken_rounded), label: "Visited"),
-
-          // Profile button
-          BottomNavigationBarItem(icon: Icon(Icons.person), label: "Profile"),
-        ],
+        ),
       ),
     );
   }
@@ -182,17 +215,17 @@ class _MenuPageState extends State<MenuPage> {
     _positionStreamSubscription =
         Geolocator.getPositionStream(locationSettings: locationSettings).listen(
       (Position position) {
-        changeCoordinates(position.latitude,position.longitude);
+        changeCoordinates(position.latitude, position.longitude);
         writePositionToFile(position);
       },
     );
 
-    _positionStreamSubscription = Geolocator.getPositionStream(locationSettings: locationSettings).listen(
-          (Position position) {
+    _positionStreamSubscription =
+        Geolocator.getPositionStream(locationSettings: locationSettings).listen(
+      (Position position) {
         db.insertCoordinate(position);
       },
     );
-
   }
 
   void stopTracking() {
@@ -204,25 +237,23 @@ class _MenuPageState extends State<MenuPage> {
     final directory = await getApplicationDocumentsDirectory();
     final file = File('${directory.path}/gps_coordinates.csv');
     String timestamp = DateTime.now().millisecondsSinceEpoch.toString();
-    try{
-      List<Placemark> placemarks = await placemarkFromCoordinates(position.latitude,position.longitude);
+    try {
+      List<Placemark> placemarks =
+          await placemarkFromCoordinates(position.latitude, position.longitude);
       logger.d("Lugares encontrados: ${placemarks[0].street}");
       changeStreet(placemarks[0].street);
       await file.writeAsString(
           '$timestamp;${placemarks[0].street};${position.latitude};${position.longitude}\n',
           mode: FileMode.append);
-    }on Exception catch(_){
+    } on Exception catch (_) {
       rethrow;
     }
   }
-  
+
   @override
-  void dispose(){
+  void dispose() {
     _uidController.dispose();
     _ageController.dispose();
     super.dispose();
   }
-
-
-
 }
