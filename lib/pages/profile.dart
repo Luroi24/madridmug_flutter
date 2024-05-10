@@ -7,6 +7,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 
+import '../models/review.dart';
 import 'login_screen.dart';
 
 String _getMoodEmoji(int moodRating) {
@@ -34,12 +35,16 @@ class ProfilePage extends StatefulWidget {
 }
 
 class _ProfilePageState extends State<ProfilePage> {
+
   Map<String, TextEditingController> controllers = {};
   final TextEditingController _commentController = TextEditingController(); // Form to insert data
   final FirebaseAuth _auth = FirebaseAuth.instance;
   int _moodRating = 0;
 
   Future<Map<String, dynamic>> _fetchAllPreferences() async {
+    var x = new Review.NoData();
+    var y = await  x.retrieveAllData();
+    print(y.length);
     final prefs = await SharedPreferences.getInstance();
     final keys = prefs.getKeys();
     final Map<String, dynamic> prefsMap = {};
