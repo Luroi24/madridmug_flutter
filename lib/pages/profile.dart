@@ -4,10 +4,9 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
-
 import '../models/review.dart';
+import '../models/place.dart';
 import 'login_screen.dart';
 
 String _getMoodEmoji(int moodRating) {
@@ -42,9 +41,14 @@ class _ProfilePageState extends State<ProfilePage> {
   int _moodRating = 0;
 
   Future<Map<String, dynamic>> _fetchAllPreferences() async {
-    var x = new Review.NoData();
-    var y = await  x.retrieveAllData();
-    print(y.length);
+    var reviews = new Review.NoData();
+    var reviewsList = await  reviews.retrieveAllData();
+    print(reviewsList.length);
+
+    var places = new Place.NoData();
+    var placesList = await places.retrieveAllPlaces();
+    print(placesList.length);
+
     final prefs = await SharedPreferences.getInstance();
     final keys = prefs.getKeys();
     final Map<String, dynamic> prefsMap = {};

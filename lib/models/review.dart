@@ -13,7 +13,8 @@ class Review{
 
   Review.NoData(){}
 
-  Review(   String this.description,
+  Review(
+      String this.description,
       int this.idPlace,
       String this.userName,
       String this.userID,
@@ -22,13 +23,13 @@ class Review{
 
   Future<List<Review>> retrieveAllData() async {
    List<Review> data = [];
-    final test1 = await db.collection("reviews").get().then((event){
+    final retrievedData = await db.collection("reviews").get().then((event){
       for (var doc in event.docs) {
-            var test = doc.data();
-           data.add(Review(test["description"],test["placeID"],test["userName"],test["userID"],test["rating"]));
-            var w = test.containsKey("userName");
+            var queryElement = doc.data();
+           data.add(Review(queryElement["description"],queryElement["placeID"],queryElement["userName"],queryElement["userID"],queryElement["rating"]));
+            var w = queryElement.containsKey("userName");
            //print(test["userName"]);
-            test.forEach((key, value){
+            queryElement.forEach((key, value){
              // print(" $key -> $value");
             });
             //print("-----------------------------");
