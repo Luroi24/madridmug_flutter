@@ -116,11 +116,13 @@ class _MenuPageState extends State<MenuPage> {
     stopTracking();
     _loadPrefs();
 
-    double _borderSize = 20;
+    double _borderSize = 12;
 
     final List pages = [
       HomePage(
         streetName: _streetName,
+        latitude: _newLatitude,
+        longitude: _newLongitude,
       ),
       MapScreen(
         latitude: _newLatitude,
@@ -138,7 +140,7 @@ class _MenuPageState extends State<MenuPage> {
           borderRadius: BorderRadius.only(
               topRight: Radius.circular(_borderSize), topLeft: Radius.circular(_borderSize)),
           boxShadow: [
-            BoxShadow(color: Colors.black38, spreadRadius: 0, blurRadius: 10),
+            BoxShadow(color: Colors.blue.shade50, spreadRadius: 0, blurRadius: 10),
           ],
         ),
         child: ClipRRect(

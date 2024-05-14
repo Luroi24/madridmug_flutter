@@ -2,10 +2,49 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
+import 'package:shared_preferences/shared_preferences.dart';
 
-class HomePage extends StatelessWidget {
+class HomePage extends StatefulWidget {
   final String streetName;
-  const HomePage({super.key, required this.streetName});
+  final double latitude;
+  final double longitude;
+
+  const HomePage({super.key, required this.streetName, required this.latitude, required this.longitude,});
+
+  @override
+  State<HomePage> createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
+  late Map<String, dynamic> weatherData = {};
+  late String apiKey = '964c6239cde629e1100a493b2b9fb5d9';
+
+  @override
+  void initState(){
+    super.initState();
+    fetchWeatherData();
+  }
+
+  Future<void> fetchWeatherData() async {
+    try{
+      print('Fetching weather data for coordinates: ${widget.latitude}, ${widget.longitude}');
+      print('Weather API URL: ${Uri.parse('https://api.openweathermap.org/data/2.5/find?lat=${widget.latitude}&lon=${widget.longitude}')}');
+
+      final response = await http.get(Uri.parse('https://api.openweathermap.org/data/2.5/weather?lat=${widget.latitude}&lon=${widget.longitude}&appid=${apiKey}'));
+      if (response.statusCode == 200) {
+        print('Weather API response: ${response.body}');
+        setState(() {
+          weatherData = json.decode(response.body);
+        });
+      } else {
+        throw Exception('Failed to load weather data: ${response.statusCode}');
+      }
+    } catch (e) {
+      throw Exception('Failed to load weather data: $e');
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -17,7 +56,7 @@ class HomePage extends StatelessWidget {
           Expanded(
             flex: 2,
             child: Container(
-              padding: EdgeInsets.only(left: 30),
+              padding: EdgeInsets.symmetric(horizontal: 20.0),
               color: Colors.yellow,
               child: Row(
                 children: [
@@ -36,14 +75,22 @@ class HomePage extends StatelessWidget {
                           flex: 1,
                           child: Container(
                             alignment: Alignment.topLeft,
-                            child: Text(streetName, style: TextStyle(fontSize: 24),),
+                            child: Text(widget.streetName, style: TextStyle(fontSize: 24),),
                         )),
                       ],
                     ),
                   ),
                   Expanded(
                     flex: 1,
-                    child: Text("You're currently at ... $streetName")),
+                    child: Padding(
+                      padding: const EdgeInsets.only(left:0),
+                      child: Row(
+                        children: [
+                          Icon(Icons.location_on),
+                          Text(widget.streetName, maxLines: 15,),
+                        ],
+                      ),
+                    )),
                 ],
               ),
             )
