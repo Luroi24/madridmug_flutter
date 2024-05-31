@@ -138,9 +138,11 @@ class _MenuPageState extends State<MenuPage> {
       bottomNavigationBar: Container(
         decoration: BoxDecoration(
           borderRadius: BorderRadius.only(
-              topRight: Radius.circular(_borderSize), topLeft: Radius.circular(_borderSize)),
+              topRight: Radius.circular(_borderSize),
+              topLeft: Radius.circular(_borderSize)),
           boxShadow: [
-            BoxShadow(color: Colors.blue.shade50, spreadRadius: 0, blurRadius: 10),
+            BoxShadow(
+                color: Colors.blue.shade50, spreadRadius: 0, blurRadius: 10),
           ],
         ),
         child: ClipRRect(
