@@ -156,6 +156,7 @@ class _MenuPageState extends State<MenuPage> {
             type: BottomNavigationBarType.fixed,
             currentIndex: _selectedIndex,
             onTap: _bottomNavSelected,
+            backgroundColor: Colors.white,
             /* decoration: BoxDecoration( 
           color: Theme.of(context).primaryColor, 
           borderRadius: const BorderRadius.only( 

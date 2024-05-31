@@ -3,7 +3,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:http/http.dart' as http;
+import 'package:madridmug_flutter/components.dart/nearby_tile.dart';
 import 'package:madridmug_flutter/components.dart/popular_tile.dart';
+import 'package:madridmug_flutter/models/place_test.dart';
 import 'dart:convert';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -59,7 +61,7 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        backgroundColor: Colors.green[50],
+      backgroundColor: Theme.of(context).colorScheme.background,
         body: Column(
           children: [
             // Top title. Shows current localization in the form of string (reverse use of the Geopoint)
@@ -67,7 +69,7 @@ class _HomePageState extends State<HomePage> {
                 flex: 2,
                 child: Container(
                   padding: EdgeInsets.symmetric(horizontal: _overallPadding),
-                  color: Colors.yellow,
+                  margin: EdgeInsets.only(top: 15),
                   child: Row(
                     children: [
                       Expanded(
@@ -87,37 +89,40 @@ class _HomePageState extends State<HomePage> {
                                   alignment: Alignment.topLeft,
                                   child: Text(
                                     widget.streetName,
-                                    style: TextStyle(fontSize: 24),
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.w600,
+                                      fontSize: 24
+                                    ),
                                   ),
                                 )),
                           ],
                         ),
                       ),
                       Expanded(
-                          flex: 1,
-                          child: Padding(
-                            padding: const EdgeInsets.only(left: 0),
-                            child: Row(
-                              children: [
-                                Icon(Icons.location_on),
-                                Text(
-                                  widget.streetName,
-                                  maxLines: 15,
-                                ),
-                              ],
-                            ),
-                          )),
+                        flex: 1,
+                        child: Padding(
+                          padding: const EdgeInsets.only(left: 10),
+                          child: Row(
+                            children: [
+                              Icon(Icons.location_on),
+                              Text(
+                                widget.streetName,
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                            ],
+                          ),
+                        )
+                      ),
                     ],
                   ),
                 )),
 
             // Cards - Popular places
             Expanded(
-                flex: 4,
+                flex: 6,
                 child: Container(
                     alignment: Alignment.center,
                     padding: EdgeInsets.symmetric(horizontal: _overallPadding),
-                    color: Colors.red,
                     child: Column(
                       children: [
                         Row(
@@ -126,35 +131,86 @@ class _HomePageState extends State<HomePage> {
                             Text(
                               "Popular",
                               style: TextStyle(
-                                  fontWeight: FontWeight.bold, fontSize: 24),
+                                  fontWeight: FontWeight.w600, fontSize: 22),
                             ),
                             Text(
                               "See all",
-                              style: TextStyle(fontSize: 12),
+                              style: TextStyle(
+                                color: Theme.of(context).primaryColor,
+                                fontSize: 12),
                             ),
                           ],
                         ),
                         const SizedBox(
-                          height: 10,
+                          height: 5,
                         ),
                         Expanded(
                           child: ListView.builder(
+                            padding: EdgeInsets.symmetric(vertical: 10),
+                            itemCount: 4,
+                            scrollDirection: Axis.horizontal,
                             itemBuilder: (context, index) {
-                              return PopularTile();
+                              PlaceTest place1 = PlaceTest(
+                                  name: "BIGASSTEEEEEEEEEEEEEEEXT",
+                                  rating: 2.0,
+                                  imagePath: "lib/images/test.png");
+                              return PopularTile(
+                                place: place1,
+                              );
                             },
                           ),
-                        )
+                        ),
+                        
                       ],
                     ))),
 
             // Cards - Nearby places
             Expanded(
-                flex: 3,
+                flex: 4,
                 child: Container(
-                  alignment: Alignment.center,
-                  color: Colors.blue,
-                  child: Text("Nearby cards"),
-                )),
+                    alignment: Alignment.center,
+                    padding: EdgeInsets.symmetric(horizontal: _overallPadding),
+                    child: Column(
+                      children: [
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                              "Nearby",
+                              style: TextStyle(
+                                  fontWeight: FontWeight.w600, fontSize: 22),
+                            ),
+                            Text(
+                              "See all",
+                              style: TextStyle(
+                                color: Theme.of(context).primaryColor,
+                                fontSize: 12),
+                            ),
+                          ],
+                        ),
+                        const SizedBox(
+                          height: 5,
+                        ),
+                        Expanded(
+                          child: ListView.builder(
+                            padding: EdgeInsets.symmetric(vertical: 10),
+                            itemCount: 4,
+                            scrollDirection: Axis.horizontal,
+                            itemBuilder: (context, index) {
+                              PlaceTest place1 = PlaceTest(
+                                  name: "this is a text AAAAAAAAAAAAAAAAAAA",
+                                  rating: 4.0,
+                                  imagePath: "lib/images/test.png");
+                              return NearbyTile(
+                                place: place1,
+                              );
+                            },
+                          ),
+                        ),
+                      ],
+                    )
+                  )
+              ),
             Expanded(
                 flex: 4,
                 child: Container(
@@ -162,9 +218,9 @@ class _HomePageState extends State<HomePage> {
                   child: Column(
                     children: [
                       Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 20.0),
+                        padding: const EdgeInsets.symmetric(vertical: 12.0),
                         child: Image.asset("lib/images/etsisi.png",
-                            color: Colors.grey[600], height: 105),
+                            color: Colors.grey[600], height: 80),
                       ),
                       Text("Developed by DarKbYte & Luroi"),
                     ],

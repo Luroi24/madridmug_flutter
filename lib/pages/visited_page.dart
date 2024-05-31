@@ -47,28 +47,27 @@ class _VisitedPageState extends State<VisitedPage> {
       backgroundColor: Colors.red.shade200,
       body: ListView.builder(
         itemCount: _coordinates.length + _dbCoordinates.length,
-        itemBuilder: (context, index)
-    {
-      if (index < _coordinates.length){
-        var coord = _coordinates[index];
-      var formattedDate = DateFormat('yyyy/MM/dd HH:mm:ss').format(
-          DateTime.fromMillisecondsSinceEpoch(int.parse(coord[0])));
-      return ListTile(
-        title: Text('Timestamp: $formattedDate'),
-        subtitle: Text(
-            '${coord[1]}\nLatitude: ${coord[2]}, Longitude: ${coord[3]}'),
-      );
-    }else{
-        var dbIndex = index - _coordinates.length;
-        var coord = _dbCoordinates[dbIndex];
-        return ListTile(
-          title: Text('DB Timestamp: ${coord[0]}', style: TextStyle(color: Colors.blue)),
-          subtitle: Text('Latitude: ${coord[1]}, Longitude: ${coord[2]}', style: TextStyle(color: Colors.blue)),
-          onTap: () => _showDeleteDialog(coord[0]),
-          // Passing timestamp to the delete dialog
-          onLongPress: () => _showUpdateDialog(coord[0], coord[1], coord[2]),
-        );
-      }
+        itemBuilder: (context, index){
+          if (index < _coordinates.length){
+            var coord = _coordinates[index];
+            var formattedDate = DateFormat('yyyy/MM/dd HH:mm:ss').format(
+              DateTime.fromMillisecondsSinceEpoch(int.parse(coord[0])));
+              return ListTile(
+                title: Text('Timestamp: $formattedDate'),
+                subtitle: Text(
+                  '${coord[1]}\nLatitude: ${coord[2]}, Longitude: ${coord[3]}'),
+                );
+          }else{
+            var dbIndex = index - _coordinates.length;
+            var coord = _dbCoordinates[dbIndex];
+            return ListTile(
+              title: Text('DB Timestamp: ${coord[0]}', style: TextStyle(color: Colors.blue)),
+              subtitle: Text('Latitude: ${coord[1]}, Longitude: ${coord[2]}', style: TextStyle(color: Colors.blue)),
+              onTap: () => _showDeleteDialog(coord[0]),
+              // Passing timestamp to the delete dialog
+              onLongPress: () => _showUpdateDialog(coord[0], coord[1], coord[2]),
+            );
+          }
         },
       ),
     );
