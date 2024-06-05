@@ -116,11 +116,13 @@ class _MenuPageState extends State<MenuPage> {
     stopTracking();
     _loadPrefs();
 
-    double _borderSize = 20;
+    double _borderSize = 12;
 
     final List pages = [
       HomePage(
         streetName: _streetName,
+        latitude: _newLatitude,
+        longitude: _newLongitude,
       ),
       MapScreen(
         latitude: _newLatitude,
@@ -136,9 +138,11 @@ class _MenuPageState extends State<MenuPage> {
       bottomNavigationBar: Container(
         decoration: BoxDecoration(
           borderRadius: BorderRadius.only(
-              topRight: Radius.circular(_borderSize), topLeft: Radius.circular(_borderSize)),
+              topRight: Radius.circular(_borderSize),
+              topLeft: Radius.circular(_borderSize)),
           boxShadow: [
-            BoxShadow(color: Colors.black38, spreadRadius: 0, blurRadius: 10),
+            BoxShadow(
+                color: Colors.blue.shade50, spreadRadius: 0, blurRadius: 10),
           ],
         ),
         child: ClipRRect(
@@ -152,6 +156,7 @@ class _MenuPageState extends State<MenuPage> {
             type: BottomNavigationBarType.fixed,
             currentIndex: _selectedIndex,
             onTap: _bottomNavSelected,
+            backgroundColor: Colors.white,
             /* decoration: BoxDecoration( 
           color: Theme.of(context).primaryColor, 
           borderRadius: const BorderRadius.only( 
