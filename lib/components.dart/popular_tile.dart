@@ -1,10 +1,11 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:madridmug_flutter/models/place_test.dart';
+
+import '../controllers/place.dart';
 
 class PopularTile extends StatelessWidget {
-  PlaceTest place;
+  Place place;
   PopularTile({super.key, required this.place});
 
   @override
@@ -16,7 +17,7 @@ class PopularTile extends StatelessWidget {
       decoration: BoxDecoration(
           image: DecorationImage(
             // TODO: Remplazar con la imagen de firebase
-            image: AssetImage(place.imagePath),
+            image: NetworkImage(place.imgURLs[0]),
             fit: BoxFit.cover,
           ),
           color: Colors.grey[100],
@@ -43,7 +44,7 @@ class PopularTile extends StatelessWidget {
                       child: Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 8.0),
                         child: Text(
-                          place.name,
+                          place.placeName.toString(),
                           style: TextStyle(color: Colors.white),
                           overflow: TextOverflow.ellipsis,
                         ),
@@ -73,7 +74,7 @@ class PopularTile extends StatelessWidget {
             Expanded(
                 flex: 1,
                 child: Icon(
-                  place.rating > 3 ? Icons.favorite : Icons.favorite_border,
+                  place.rating!.toInt() > 3 ? Icons.favorite : Icons.favorite_border,
                   color: Colors.red,
                 ))
           ],

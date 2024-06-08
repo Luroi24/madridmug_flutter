@@ -41,13 +41,13 @@ class _ProfilePageState extends State<ProfilePage> {
   int _moodRating = 0;
 
   Future<Map<String, dynamic>> _fetchAllPreferences() async {
-    var reviews = new Review.NoData();
-    var reviewsList = await  reviews.retrieveAllData();
-    print(reviewsList.length);
+    //var reviews = new Review.NoData();
+    //var reviewsList = await  reviews.retrieveAllData();
+    //print(reviewsList.length);
 
-    var places = new Place.NoData();
-    var placesList = await places.retrieveAllPlaces();
-    print(placesList.length);
+    //var places = new Place.NoData();
+    //var placesList = await places.retrieveAllPlaces();
+    //print(placesList.length);
 
     final prefs = await SharedPreferences.getInstance();
     final keys = prefs.getKeys();
@@ -61,7 +61,7 @@ class _ProfilePageState extends State<ProfilePage> {
 
   Future<void> _updatePreference(String key, String value) async {
     final prefs = await SharedPreferences.getInstance();
-    if (value is String) {
+    if (value is String){
       prefs.setString(key, value);
     }
   }

@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:madridmug_flutter/models/place_test.dart';
+import 'package:madridmug_flutter/controllers/place_test.dart';
+
+import '../controllers/place.dart';
 
 class NearbyTile extends StatelessWidget {
-  PlaceTest place;
+  Place place;
   NearbyTile({super.key, required this.place});
 
   @override
@@ -29,13 +31,13 @@ class NearbyTile extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    place.name,
+                    place.placeName.toString(),
                     overflow: TextOverflow.ellipsis,
                   ),
                   Transform.translate(
                     offset: const Offset(0,-5),
                     child: Text(
-                      place.name,
+                      place.category.toString(),
                       style: const TextStyle(
                         fontSize: 11,
                       ),  
@@ -50,7 +52,7 @@ class NearbyTile extends StatelessWidget {
             height: 95,
             decoration: BoxDecoration(
               image: DecorationImage(
-                image: AssetImage(place.imagePath), 
+                image: NetworkImage(place.imgURLs[0]),
                 fit: BoxFit.fill
               ),
               borderRadius: BorderRadius.circular(12)),

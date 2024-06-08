@@ -974,7 +974,7 @@ PODS:
   - firebase_core (2.31.0):
     - Firebase/CoreOnly (= 10.25.0)
     - Flutter
-  - firebase_database (10.5.4):
+  - firebase_database (10.5.5):
     - Firebase/Database (= 10.25.0)
     - firebase_core
     - Flutter
@@ -1220,7 +1220,7 @@ SPEC CHECKSUMS:
   Firebase: 0312a2352584f782ea56f66d91606891d4607f06
   firebase_auth: 59b73550b86d6213a4e9509a9c21b59ea524c647
   firebase_core: 0b39f4f424e02eecabb2356ddf331fa07b772af8
-  firebase_database: e3b844df8285fc87e90fff178c2b45cdafcc94cd
+  firebase_database: f28e95d6c770bf0bb7da58b307cc38855b1db834
   FirebaseAppCheckInterop: 5da5ce93e8797a215e3f677fb0654b74e736c8b8
   FirebaseAuth: c0f93dcc570c9da2bffb576969d793e95c344fbb
   FirebaseCore: 7ec4d0484817f12c3373955bc87762d96842d483
