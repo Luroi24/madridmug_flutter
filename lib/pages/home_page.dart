@@ -37,7 +37,6 @@ class _HomePageState extends State<HomePage> {
   late List<Place> places = [];
   late List<Place> nearbyPlaces = [];
 
-
   @override
   void initState() {
     super.initState();
@@ -45,29 +44,24 @@ class _HomePageState extends State<HomePage> {
     fetchWeatherData();
   }
 
-  Future<void> fetchPlaces() async{
-    try{
+  Future<void> fetchPlaces() async {
+    try {
       places = await new Place.NoData().retrieveAllPlaces();
-      places.sort((a,b) => a.rating!.compareTo(b.rating!));
+      places.sort((a, b) => a.rating!.compareTo(b.rating!));
       places = places.reversed.toList();
-      for(int i=0;i<places.length;i++){
+      for (int i = 0; i < places.length; i++) {
         nearbyPlaces.add(places[i]);
       }
-      nearbyPlaces.sort((a,b) => ((
-          pow(a.coordinates[0]!-widget.latitude,2) +
-            pow(a.coordinates[1]!-widget.longitude,2)
-          ).compareTo((
-          pow(b.coordinates[0]!-widget.latitude,2) +
-              pow(b.coordinates[1]!-widget.longitude,2)
-      ))));
-  }
-  catch(e){
+      nearbyPlaces.sort((a, b) =>
+          ((pow(a.coordinates[0]! - widget.latitude, 2) +
+                  pow(a.coordinates[1]! - widget.longitude, 2))
+              .compareTo((pow(b.coordinates[0]! - widget.latitude, 2) +
+                  pow(b.coordinates[1]! - widget.longitude, 2)))));
+    } catch (e) {
       print('Error: $e');
+    }
+    return;
   }
-  return;
-}
-
-
 
   Future<void> fetchWeatherData() async {
     try {
@@ -94,183 +88,205 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        backgroundColor: Theme.of(context).colorScheme.background,
-        body: Column(
-          children: [
-            // Top title. Shows current localization in the form of string (reverse use of the Geopoint)
-            Expanded(
-                flex: 2,
-                child: Container(
-                  padding: EdgeInsets.symmetric(horizontal: _overallPadding),
-                  margin: EdgeInsets.only(top: 15),
-                  child: Row(
+      backgroundColor: Theme.of(context).colorScheme.background,
+      body: Column(
+        children: [
+          // Top title. Shows current localization in the form of string (reverse use of the Geopoint)
+        Expanded(
+          flex: 2,
+          child: Container(
+            padding: EdgeInsets.symmetric(horizontal: _overallPadding),
+            margin: EdgeInsets.only(top: 15),
+            child: Row(
+              children: [
+                Expanded(
+                  flex: 2,
+                  child: Column(
                     children: [
                       Expanded(
-                        flex: 2,
-                        child: Column(
-                          children: [
-                            Expanded(
-                              flex: 1,
-                              child: Container(
-                                alignment: Alignment.bottomLeft,
-                                child: Text("Explore"),
-                              ),
-                            ),
-                            Expanded(
-                                flex: 1,
-                                child: Container(
-                                  alignment: Alignment.topLeft,
-                                  child: Text(
-                                    widget.streetName,
-                                    style: TextStyle(
-                                        fontWeight: FontWeight.w600,
-                                        fontSize: 24),
-                                  ),
-                                )),
-                          ],
+                        flex: 1,
+                        child: Container(
+                          alignment: Alignment.bottomLeft,
+                          child: Text("Explore"),
                         ),
                       ),
                       Expanded(
                           flex: 1,
-                          child: Padding(
-                            padding: const EdgeInsets.only(left: 10),
-                            child: Row(
-                              children: [
-                                Icon(Icons.location_on, color: Color(0XFF606060),),
-                                Text(
-                                  widget.streetName,
-                                  style: TextStyle(color: Color(0xFF606060)),
-                                  overflow: TextOverflow.ellipsis,
-                                ),
-                              ],
+                          child: Container(
+                            alignment: Alignment.topLeft,
+                            child: Text(
+                              widget.streetName,
+                              style: TextStyle(
+                                  fontWeight: FontWeight.w600,
+                                  fontSize: 24),
                             ),
                           )),
                     ],
                   ),
-                )),
-
-            // Cards - Popular places
-            Expanded(
-                flex: 6,
-                child: Container(
-                    alignment: Alignment.center,
-                    padding: EdgeInsets.symmetric(horizontal: _overallPadding),
-                    child: Column(
-                      children: [
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text(
-                              "Popular",
-                              style: TextStyle(
-                                  fontWeight: FontWeight.w600, fontSize: 22),
-                            ),
-                            Text(
-                              "See all",
-                              style: TextStyle(
-                                  color: Theme.of(context).primaryColor,
-                                  fontSize: 12),
-                            ),
-                          ],
-                        ),
-                        const SizedBox(
-                          height: 5,
-                        ),
-                        Expanded(
-                          child: ListView.builder(
-                            padding: EdgeInsets.symmetric(vertical: 10),
-                            itemCount: places.length,
-                            scrollDirection: Axis.horizontal,
-                            itemBuilder: (context, index) {
-                              Place place1 = Place(
-                                  places[index].description.toString(),
-                                  places[index].category.toString(),
-                                  places[index].idPlace!.toInt(),
-                                  places[index].imgURLs,
-                                  places[index].coordinates,
-                                  places[index].placeName.toString(),
-                                  places[index].rating!.toDouble()
-                              );
-                              return PopularTile(
-                                place: place1,
-                              );
-                            },
+                ),
+                Expanded(
+                    flex: 1,
+                    child: Padding(
+                      padding: const EdgeInsets.only(left: 10),
+                      child: Row(
+                        children: [
+                          Icon(
+                            Icons.location_on,
+                            color: Color(0XFF606060),
                           ),
-                        ),
-                      ],
-                    ))),
-
-            // Cards - Nearby places
-            Expanded(
-                flex: 4,
-                child: Container(
-                    alignment: Alignment.center,
-                    padding: EdgeInsets.symmetric(horizontal: _overallPadding),
-                    child: Column(
-                      children: [
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text(
-                              "Nearby",
-                              style: TextStyle(
-                                  fontWeight: FontWeight.w600, fontSize: 22),
-                            ),
-                            Text(
-                              "See all",
-                              style: TextStyle(
-                                  color: Theme.of(context).primaryColor,
-                                  fontSize: 12),
-                            ),
-                          ],
-                        ),
-                        const SizedBox(
-                          height: 5,
-                        ),
-                        Expanded(
-                          child: ListView.builder(
-                            padding: EdgeInsets.symmetric(vertical: 10),
-                            itemCount: nearbyPlaces.length,
-                            scrollDirection: Axis.horizontal,
-                            itemBuilder: (context, index) {
-                              Place place2 = Place(
-                                  nearbyPlaces[index].description.toString(),
-                                  nearbyPlaces[index].category.toString(),
-                                  nearbyPlaces[index].idPlace!.toInt(),
-                                  nearbyPlaces[index].imgURLs,
-                                  nearbyPlaces[index].coordinates,
-                                  nearbyPlaces[index].placeName.toString(),
-                                  nearbyPlaces[index].rating!.toDouble()
-                              );
-                              return NearbyTile(
-                                place: place2,
-                              );
-                            },
+                          Text(
+                            widget.streetName,
+                            style: TextStyle(color: Color(0xFF606060)),
+                            overflow: TextOverflow.ellipsis,
                           ),
-                        ),
+                        ],
+                      ),
+                    )),
+              ],
+            ),
+          )),
 
-                      ],
-                    ))),
-            Expanded(
-                flex: 4,
-                child: Container(
-                  alignment: Alignment.bottomCenter,
-                  child: Column(
+        // Cards - Popular places
+        Expanded(
+          flex: 6,
+          child: Container(
+              alignment: Alignment.center,
+              padding: EdgeInsets.symmetric(horizontal: _overallPadding),
+              child: Column(
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 12.0),
-                        child: Image.asset("lib/images/etsisi.png",
-                            color: Colors.grey[600], height: 80),
+                      Text(
+                        "Popular",
+                        style: TextStyle(
+                            fontWeight: FontWeight.w600, fontSize: 22),
                       ),
                       Text(
-                        "Developed by DarKbYte & Luroi",
-                        style: TextStyle(color: Color(0xFF606060),),
+                        "See all",
+                        style: TextStyle(
+                            color: Theme.of(context).primaryColor,
+                            fontSize: 12),
                       ),
                     ],
                   ),
-                ))
-          ],
-        )
-    );
+                  const SizedBox(
+                    height: 5,
+                  ),
+                  Expanded(
+                    child: ListView.builder(
+                      padding: EdgeInsets.symmetric(vertical: 10),
+                      itemCount: places.length,
+                      scrollDirection: Axis.horizontal,
+                      itemBuilder: (context, index) {
+                        Place place1 = Place(
+                            places[index].description.toString(),
+                            places[index].category.toString(),
+                            places[index].idPlace!.toInt(),
+                            places[index].imgURLs,
+                            places[index].coordinates,
+                            places[index].placeName.toString(),
+                            places[index].rating!.toDouble());
+                        return GestureDetector(
+                          onTap: () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) =>
+                                    PlaceDetails(place: places[index]),
+                                ));
+                          },
+                          child: PopularTile(
+                            place: place1,
+                          ),
+                        );
+                      },
+                    ),
+                  ),
+                ],
+              ))),
+
+        // Cards - Nearby places
+        Expanded(
+          flex: 4,
+          child: Container(
+              alignment: Alignment.center,
+              padding: EdgeInsets.symmetric(horizontal: _overallPadding),
+              child: Column(
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        "Nearby",
+                        style: TextStyle(
+                            fontWeight: FontWeight.w600, fontSize: 22),
+                      ),
+                      Text(
+                        "See all",
+                        style: TextStyle(
+                            color: Theme.of(context).primaryColor,
+                            fontSize: 12),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(
+                    height: 5,
+                  ),
+                  Expanded(
+                    child: ListView.builder(
+                      padding: EdgeInsets.symmetric(vertical: 10),
+                      itemCount: nearbyPlaces.length,
+                      scrollDirection: Axis.horizontal,
+                      itemBuilder: (context, index) {
+                        Place place2 = Place(
+                            nearbyPlaces[index].description.toString(),
+                            nearbyPlaces[index].category.toString(),
+                            nearbyPlaces[index].idPlace!.toInt(),
+                            nearbyPlaces[index].imgURLs,
+                            nearbyPlaces[index].coordinates,
+                            nearbyPlaces[index].placeName.toString(),
+                            nearbyPlaces[index].rating!.toDouble());
+                        return GestureDetector(
+                          onTap: () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) =>
+                                    PlaceDetails(place: nearbyPlaces[index]),
+                                ));
+                          },
+                          child: NearbyTile(
+                            place: place2,
+                          ),
+                        );
+                      },
+                    ),
+                  ),
+                ],
+              ))),
+
+        Expanded(
+          flex: 4,
+          child: Container(
+            alignment: Alignment.bottomCenter,
+            child: Column(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 12.0),
+                  child: Image.asset("lib/images/etsisi.png",
+                      color: Colors.grey[600], height: 80),
+                ),
+                Text(
+                  "Developed by DarKbYte & Luroi",
+                  style: TextStyle(
+                    color: Color(0xFF606060),
+                  ),
+                ),
+              ],
+            ),
+          ))
+      ],
+    ));
   }
 }
