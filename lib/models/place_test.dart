@@ -1,8 +1,8 @@
 class PlaceTest {
   final String name;
   final double rating;
-  final String imagePath;
+  final List<String> images;
 
   PlaceTest(
-      {required this.name, required this.rating, required this.imagePath});
+      {required this.name, required this.rating, required this.images});
 }

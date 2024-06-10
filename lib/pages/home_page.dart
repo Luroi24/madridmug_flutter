@@ -6,6 +6,7 @@ import 'package:http/http.dart' as http;
 import 'package:madridmug_flutter/components.dart/nearby_tile.dart';
 import 'package:madridmug_flutter/components.dart/popular_tile.dart';
 import 'package:madridmug_flutter/models/place_test.dart';
+import 'package:madridmug_flutter/pages/place_details.dart';
 import 'dart:convert';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -54,14 +55,14 @@ class _HomePageState extends State<HomePage> {
         throw Exception('Failed to load weather data: ${response.statusCode}');
       }
     } catch (e) {
-      throw Exception('Failed to load weather data: $e');
+      throw Exception("Error: ${e}");
     }
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Theme.of(context).colorScheme.background,
+        backgroundColor: Theme.of(context).colorScheme.background,
         body: Column(
           children: [
             // Top title. Shows current localization in the form of string (reverse use of the Geopoint)
@@ -90,29 +91,28 @@ class _HomePageState extends State<HomePage> {
                                   child: Text(
                                     widget.streetName,
                                     style: TextStyle(
-                                      fontWeight: FontWeight.w600,
-                                      fontSize: 24
-                                    ),
+                                        fontWeight: FontWeight.w600,
+                                        fontSize: 24),
                                   ),
                                 )),
                           ],
                         ),
                       ),
                       Expanded(
-                        flex: 1,
-                        child: Padding(
-                          padding: const EdgeInsets.only(left: 10),
-                          child: Row(
-                            children: [
-                              Icon(Icons.location_on),
-                              Text(
-                                widget.streetName,
-                                overflow: TextOverflow.ellipsis,
-                              ),
-                            ],
-                          ),
-                        )
-                      ),
+                          flex: 1,
+                          child: Padding(
+                            padding: const EdgeInsets.only(left: 10),
+                            child: Row(
+                              children: [
+                                Icon(Icons.location_on, color: Color(0XFF606060),),
+                                Text(
+                                  widget.streetName,
+                                  style: TextStyle(color: Color(0xFF606060)),
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                              ],
+                            ),
+                          )),
                     ],
                   ),
                 )),
@@ -136,8 +136,8 @@ class _HomePageState extends State<HomePage> {
                             Text(
                               "See all",
                               style: TextStyle(
-                                color: Theme.of(context).primaryColor,
-                                fontSize: 12),
+                                  color: Theme.of(context).primaryColor,
+                                  fontSize: 12),
                             ),
                           ],
                         ),
@@ -153,14 +153,26 @@ class _HomePageState extends State<HomePage> {
                               PlaceTest place1 = PlaceTest(
                                   name: "BIGASSTEEEEEEEEEEEEEEEXT",
                                   rating: 2.0,
-                                  imagePath: "lib/images/test.png");
-                              return PopularTile(
-                                place: place1,
+                                  images: ["lib/images/test.png", "lib/images/test2.jpeg"]);
+                              return GestureDetector(
+                                onTap: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(builder: (context) {
+                                      return PlaceDetails(
+                                        place: place1,
+                                      );
+                                    }
+                                    ),
+                                  );
+                                },
+                                child: PopularTile(
+                                  place: place1,
+                                ),
                               );
                             },
                           ),
                         ),
-                        
                       ],
                     ))),
 
@@ -183,8 +195,8 @@ class _HomePageState extends State<HomePage> {
                             Text(
                               "See all",
                               style: TextStyle(
-                                color: Theme.of(context).primaryColor,
-                                fontSize: 12),
+                                  color: Theme.of(context).primaryColor,
+                                  fontSize: 12),
                             ),
                           ],
                         ),
@@ -200,17 +212,30 @@ class _HomePageState extends State<HomePage> {
                               PlaceTest place1 = PlaceTest(
                                   name: "this is a text AAAAAAAAAAAAAAAAAAA",
                                   rating: 4.0,
-                                  imagePath: "lib/images/test.png");
-                              return NearbyTile(
-                                place: place1,
+                                  images: ["lib/images/test.png", "lib/images/test2.jpeg"]);
+                              return GestureDetector(
+                                
+                                onTap: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) {
+                                        return PlaceDetails(
+                                          place: place1,
+                                        );
+                                      },
+                                    ),
+                                  );
+                                },
+                                child: NearbyTile(
+                                  place: place1,
+                                ),
                               );
                             },
                           ),
                         ),
                       ],
-                    )
-                  )
-              ),
+                    ))),
             Expanded(
                 flex: 4,
                 child: Container(
@@ -222,7 +247,10 @@ class _HomePageState extends State<HomePage> {
                         child: Image.asset("lib/images/etsisi.png",
                             color: Colors.grey[600], height: 80),
                       ),
-                      Text("Developed by DarKbYte & Luroi"),
+                      Text(
+                        "Developed by DarKbYte & Luroi",
+                        style: TextStyle(color: Color(0xFF606060),),
+                      ),
                     ],
                   ),
                 ))

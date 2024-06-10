@@ -16,7 +16,7 @@ class PopularTile extends StatelessWidget {
       decoration: BoxDecoration(
           image: DecorationImage(
             // TODO: Remplazar con la imagen de firebase
-            image: AssetImage(place.imagePath),
+            image: AssetImage(place.images[1]),
             fit: BoxFit.cover,
           ),
           color: Colors.grey[100],
