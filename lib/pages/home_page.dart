@@ -1,14 +1,18 @@
 // ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
 
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:http/http.dart' as http;
 import 'package:madridmug_flutter/components.dart/nearby_tile.dart';
 import 'package:madridmug_flutter/components.dart/popular_tile.dart';
-import 'package:madridmug_flutter/models/place_test.dart';
+import 'package:madridmug_flutter/controllers/place_test.dart';
 import 'package:madridmug_flutter/pages/place_details.dart';
 import 'dart:convert';
 import 'package:shared_preferences/shared_preferences.dart';
+
+import '../controllers/place.dart';
 
 class HomePage extends StatefulWidget {
   final String streetName;
@@ -30,12 +34,40 @@ class _HomePageState extends State<HomePage> {
   late Map<String, dynamic> weatherData = {};
   late String apiKey = '964c6239cde629e1100a493b2b9fb5d9';
   final double _overallPadding = 25;
+  late List<Place> places = [];
+  late List<Place> nearbyPlaces = [];
+
 
   @override
   void initState() {
     super.initState();
+    fetchPlaces();
     fetchWeatherData();
   }
+
+  Future<void> fetchPlaces() async{
+    try{
+      places = await new Place.NoData().retrieveAllPlaces();
+      places.sort((a,b) => a.rating!.compareTo(b.rating!));
+      places = places.reversed.toList();
+      for(int i=0;i<places.length;i++){
+        nearbyPlaces.add(places[i]);
+      }
+      nearbyPlaces.sort((a,b) => ((
+          pow(a.coordinates[0]!-widget.latitude,2) +
+            pow(a.coordinates[1]!-widget.longitude,2)
+          ).compareTo((
+          pow(b.coordinates[0]!-widget.latitude,2) +
+              pow(b.coordinates[1]!-widget.longitude,2)
+      ))));
+  }
+  catch(e){
+      print('Error: $e');
+  }
+  return;
+}
+
+
 
   Future<void> fetchWeatherData() async {
     try {
@@ -147,28 +179,20 @@ class _HomePageState extends State<HomePage> {
                         Expanded(
                           child: ListView.builder(
                             padding: EdgeInsets.symmetric(vertical: 10),
-                            itemCount: 4,
+                            itemCount: places.length,
                             scrollDirection: Axis.horizontal,
                             itemBuilder: (context, index) {
-                              PlaceTest place1 = PlaceTest(
-                                  name: "BIGASSTEEEEEEEEEEEEEEEXT",
-                                  rating: 2.0,
-                                  images: ["lib/images/test.png", "lib/images/test2.jpeg"]);
-                              return GestureDetector(
-                                onTap: () {
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(builder: (context) {
-                                      return PlaceDetails(
-                                        place: place1,
-                                      );
-                                    }
-                                    ),
-                                  );
-                                },
-                                child: PopularTile(
-                                  place: place1,
-                                ),
+                              Place place1 = Place(
+                                  places[index].description.toString(),
+                                  places[index].category.toString(),
+                                  places[index].idPlace!.toInt(),
+                                  places[index].imgURLs,
+                                  places[index].coordinates,
+                                  places[index].placeName.toString(),
+                                  places[index].rating!.toDouble()
+                              );
+                              return PopularTile(
+                                place: place1,
                               );
                             },
                           ),
@@ -206,34 +230,25 @@ class _HomePageState extends State<HomePage> {
                         Expanded(
                           child: ListView.builder(
                             padding: EdgeInsets.symmetric(vertical: 10),
-                            itemCount: 4,
+                            itemCount: nearbyPlaces.length,
                             scrollDirection: Axis.horizontal,
                             itemBuilder: (context, index) {
-                              PlaceTest place1 = PlaceTest(
-                                  name: "this is a text AAAAAAAAAAAAAAAAAAA",
-                                  rating: 4.0,
-                                  images: ["lib/images/test.png", "lib/images/test2.jpeg"]);
-                              return GestureDetector(
-                                
-                                onTap: () {
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (context) {
-                                        return PlaceDetails(
-                                          place: place1,
-                                        );
-                                      },
-                                    ),
-                                  );
-                                },
-                                child: NearbyTile(
-                                  place: place1,
-                                ),
+                              Place place2 = Place(
+                                  nearbyPlaces[index].description.toString(),
+                                  nearbyPlaces[index].category.toString(),
+                                  nearbyPlaces[index].idPlace!.toInt(),
+                                  nearbyPlaces[index].imgURLs,
+                                  nearbyPlaces[index].coordinates,
+                                  nearbyPlaces[index].placeName.toString(),
+                                  nearbyPlaces[index].rating!.toDouble()
+                              );
+                              return NearbyTile(
+                                place: place2,
                               );
                             },
                           ),
                         ),
+
                       ],
                     ))),
             Expanded(
@@ -255,6 +270,7 @@ class _HomePageState extends State<HomePage> {
                   ),
                 ))
           ],
-        ));
+        )
+    );
   }
 }
