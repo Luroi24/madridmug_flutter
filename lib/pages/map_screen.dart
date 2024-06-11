@@ -3,18 +3,59 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart';
+import 'package:madridmug_flutter/controllers/place.dart';
 
 class MapScreen extends StatefulWidget {
   final double latitude;
   final double longitude;
+  final List<Place> places;
 
-  const MapScreen({super.key, required this.latitude, required this.longitude,});
+  const MapScreen({super.key, required this.latitude, required this.longitude, required this.places});
 
   @override
   _MapScreenState createState() => _MapScreenState();
 }
 
 class _MapScreenState extends State<MapScreen> {
+  List<Marker> placesMarkers = [];
+
+  @override
+  void initState(){
+    super.initState();
+    _loadMarkers();
+  }
+
+  void _loadMarkers() {
+    List<Marker> loadedMarkers = widget.places.map((record) {
+    return Marker(
+      point: LatLng(record.coordinates[0], record.coordinates[1]),
+      width: 80,
+      height: 80,
+      alignment: Alignment.lerp(Alignment.topCenter, Alignment.center, 0.5),
+      child: Icon(
+        Icons.location_pin,
+        size: 60,
+        color: Colors.red,
+      ),
+    );
+  }).toList();
+  Marker temp = Marker(
+    point: LatLng(widget.latitude,widget.longitude),
+    width: 80,
+    height: 80,
+    alignment: Alignment.lerp(Alignment.topCenter, Alignment.center, 0.5),
+    child: Icon(
+      Icons.location_pin,
+      size: 60,
+      color: Colors.brown,
+    ),
+  );
+  loadedMarkers.add(temp);
+  setState(() {
+    placesMarkers = loadedMarkers;
+  });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -31,51 +72,19 @@ class _MapScreenState extends State<MapScreen> {
                 const InteractionOptions(flags: InteractiveFlag.pinchZoom | InteractiveFlag.drag)),
         children: [
           openStreetMapTileLayer,
-          MarkerLayer(markers: [
-            Marker(
-                point: LatLng(widget.latitude,widget.longitude),
-                width: 80,
-                height: 80,
-                child: Stack(
-                  children: [
-                    Icon(
-                      Icons.location_pin,
-                      size: 60,
-                      color: Colors.brown[400],
-                    ),
-                  ],
-                )),
-            Marker(
-                point: LatLng(40.38988743556828, -3.633014220376507),
-                width: 60,
-                height: 60,
-                alignment: Alignment.centerLeft,
-                child: Icon(
-                  Icons.location_pin,
-                  size: 60,
-                  color: Colors.red,
-                )),
-            Marker(
-                point: LatLng(40.39527505048739, -3.630359246796122),
-                width: 60,
-                height: 60,
-                alignment: Alignment.centerLeft,
-                child: Icon(
-                  Icons.location_pin,
-                  size: 60,
-                  color: Colors.green,
-                )),
-            Marker(
-                point: LatLng(40.39300371783269, -3.622394326054965),
-                width: 60,
-                height: 60,
-                alignment: Alignment.centerLeft,
-                child: Icon(
-                  Icons.location_pin,
-                  size: 60,
-                  color: Colors.blue,
-                )),
-          ])
+          MarkerLayer(markers: placesMarkers),
+          PolylineLayer(
+            polylines: placesMarkers.length > 2 ? [] : [
+              Polyline(
+                points: [
+                  LatLng(widget.latitude,widget.longitude),
+                  LatLng(widget.places[0].coordinates[0], widget.places[0].coordinates[1])
+                ],
+                color: Colors.pink.shade700,
+                strokeWidth: 8
+              ),
+            ],
+          )
         ]);
   }
 }

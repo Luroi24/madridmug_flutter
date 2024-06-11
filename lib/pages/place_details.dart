@@ -4,9 +4,12 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:madridmug_flutter/controllers/place.dart';
 import 'package:madridmug_flutter/controllers/place_test.dart';
+import 'package:madridmug_flutter/pages/map_screen.dart';
 
 class PlaceDetails extends StatefulWidget {
   Place place;
+  final double latitude;
+  final double longitude;
 
   /* 
     places[index].description.toString(),
@@ -17,7 +20,11 @@ class PlaceDetails extends StatefulWidget {
     places[index].placeName.toString(),
     places[index].rating!.toDouble());
   */
-  PlaceDetails({super.key, required this.place});
+  PlaceDetails({
+    super.key,
+    required this.place,
+    required this.latitude,
+    required this.longitude});
 
   @override
   State<PlaceDetails> createState() => _PlaceDetailsState();
@@ -104,7 +111,11 @@ class _PlaceDetailsState extends State<PlaceDetails> {
                         Icons.map,
                         color: Colors.black,
                       ),
-                      onPressed: () => print("jiji")
+                      onPressed: () {
+                        Navigator.push(context, MaterialPageRoute(builder: (context) {
+                          return MapScreen(latitude: widget.latitude, longitude: widget.longitude, places: [widget.place]);
+                        },));
+                      }
                     ),
                   ),
               ]),

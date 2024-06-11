@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:madridmug_flutter/pages/home_page.dart';
 import 'package:madridmug_flutter/pages/register_page.dart';
 class LoginScreen extends StatefulWidget {
   @override
@@ -17,6 +18,7 @@ class _LoginScreenState extends State<LoginScreen> {
       )).user;
       if (user != null) {
         print('Login successful!');
+        Navigator.pop(context);
       } else {
         print('Login failed!');
       }

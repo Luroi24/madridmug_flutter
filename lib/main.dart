@@ -6,6 +6,7 @@ import 'package:madridmug_flutter/pages/counter_page.dart';
 import 'package:madridmug_flutter/pages/menu_page.dart';
 import 'package:madridmug_flutter/pages/todo_page.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:madridmug_flutter/pages/welcome_page.dart';
 import 'firebase_options.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:madridmug_flutter/pages/login_screen.dart';
@@ -46,7 +47,7 @@ class MyApp extends StatelessWidget {
             if (snapshot.data != null) {
               return MenuPage(); // Usuario está logueado
             }
-            return LoginScreen(); // Usuario no está logueado
+            return WelcomePage(); // Usuario no está logueado
           }
           return CircularProgressIndicator(); // Esperando conexión
         },

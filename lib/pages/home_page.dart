@@ -193,7 +193,7 @@ class _HomePageState extends State<HomePage> {
                                 context,
                                 MaterialPageRoute(
                                   builder: (context) =>
-                                    PlaceDetails(place: places[index]),
+                                    PlaceDetails(latitude:widget.latitude, longitude: widget.longitude, place: places[index]),
                                 ));
                           },
                           child: PopularTile(
@@ -253,7 +253,7 @@ class _HomePageState extends State<HomePage> {
                                 context,
                                 MaterialPageRoute(
                                   builder: (context) =>
-                                    PlaceDetails(place: nearbyPlaces[index]),
+                                    PlaceDetails(latitude:widget.latitude, longitude: widget.longitude, place: nearbyPlaces[index]),
                                 ));
                           },
                           child: NearbyTile(

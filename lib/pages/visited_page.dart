@@ -1,11 +1,25 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'dart:io';
 import 'package:intl/intl.dart';
+import 'package:madridmug_flutter/components.dart/reviewed_tile.dart';
+import 'package:madridmug_flutter/components.dart/to_review_tile.dart';
+import 'package:madridmug_flutter/controllers/place.dart';
+import 'package:madridmug_flutter/pages/place_details.dart';
 import 'package:path_provider/path_provider.dart';
 import '../db/database_helper.dart';
 
 class VisitedPage extends StatefulWidget {
-  const VisitedPage({super.key});
+  final List<Place> places;
+  final double latitude;
+  final double longitude;
+  const VisitedPage({
+    super.key,
+    required this.places,
+    required this.latitude,
+    required this.longitude,
+  });
 
   @override
   State<VisitedPage> createState() => _VisitedPageState();
@@ -14,6 +28,9 @@ class VisitedPage extends StatefulWidget {
 class _VisitedPageState extends State<VisitedPage> {
   List<List<String>> _coordinates = [];
   List<List<String>> _dbCoordinates = [];
+  Set<Place> placesToRate = {};
+
+
   @override
   void initState() {
     super.initState();
@@ -39,13 +56,98 @@ class _VisitedPageState extends State<VisitedPage> {
         c['longitude'].toString() // Corrected
       ]).toList();
     });
+    availableToRate();
+  }
+  void availableToRate(){
+    Set<Place> temp = {};
+    print("Test: ${_dbCoordinates.length}");
+    print("Test2: ${widget.places.length}");
+    for(var coordinate in _dbCoordinates){
+      for (var place in widget.places) {
+        // TODO: Cambiar a valores más pequeños (las sumas que se hacen a las coordenadas de los lugares)
+        if(double.parse(coordinate[1]) <= (place.coordinates[0]+1) && 
+            double.parse(coordinate[1]) >= (place.coordinates[0]-1) &&
+            double.parse(coordinate[2]) <= (place.coordinates[1]+1) &&
+            double.parse(coordinate[2]) >= (place.coordinates[1]-1)){
+          temp.add(place);
+        }
+      }
+    }
+    print("places: $temp");
+    setState(() {
+      placesToRate = temp;
+    });
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.red.shade200,
-      body: ListView.builder(
+      backgroundColor: Theme.of(context).colorScheme.background,
+      body: Column(
+        children: [
+          // To review title
+          Container(
+            height: 100,
+            margin: const EdgeInsets.only(bottom: 20),
+            child: const Column(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                Text(
+                  "About to brew up",
+                  style: TextStyle(fontSize: 24),),
+                // To review subtitle
+                Text("You can leave a review here"),
+              ],
+            ),
+          ),
+          // Listview of places to review
+          Container(
+            height: 250,
+            child: ListView.builder(
+              itemCount: placesToRate.length,
+              scrollDirection: Axis.vertical,
+              itemBuilder: (context, index) {
+                return GestureDetector(
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => PlaceDetails(place: placesToRate.toList()[index], latitude: widget.latitude, longitude: widget.longitude),));
+                  },
+                  child: ToReviewTile(place: placesToRate.toList()[index],));
+              },
+            ),
+          ),
+          // Reviewed title
+          Container(
+            alignment: Alignment.center,
+            margin: const EdgeInsets.all(20),
+            child: const Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(
+                  "Roasted coffee",
+                  style: TextStyle(fontSize: 24),
+                ),
+                // To review subtitle
+                Text("Someone cooked here..."),
+              ],
+            ),
+          ),
+          // Listview of places to review
+          Container(
+            height: 250,
+            margin: const EdgeInsets.only(bottom: 50),
+            child: ListView.builder(
+              itemCount: 4,
+              scrollDirection: Axis.vertical,
+              itemBuilder: (context, index) {
+                return const ReviewdTile();
+              },
+            ),
+          ),
+        ],
+      ),
+      /*body: ListView.builder(
         itemCount: _coordinates.length + _dbCoordinates.length,
         itemBuilder: (context, index){
           if (index < _coordinates.length){
@@ -69,7 +171,7 @@ class _VisitedPageState extends State<VisitedPage> {
             );
           }
         },
-      ),
+      ),*/
     );
   }
 

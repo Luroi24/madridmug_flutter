@@ -2,6 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
+import 'package:madridmug_flutter/controllers/place.dart';
 import 'package:madridmug_flutter/pages/home_page.dart';
 import 'package:madridmug_flutter/pages/map_screen.dart';
 import 'package:madridmug_flutter/pages/profile.dart';
@@ -28,10 +29,23 @@ class _MenuPageState extends State<MenuPage> {
   final _uidController = TextEditingController();
   final _ageController = TextEditingController();
   final logger = Logger();
+  late List<Place> _places = [];
 
   double _newLatitude = 40.407447684737356;
   double _newLongitude = -3.6152570335947654;
   String _streetName = "Not set yet";
+
+  Future<void> fetchPlaces() async {
+    try {
+      _places = await new Place.NoData().retrieveAllPlaces();
+      _places.sort((a, b) => a.rating!.compareTo(b.rating!));
+      _places = _places.reversed.toList();
+      print("Places: $_places");
+    } catch (e) {
+      print('Error: $e');
+    }
+    return;
+  }
 
   void changeStreet(String? newStreet) {
     if (newStreet != null) {
@@ -61,6 +75,7 @@ class _MenuPageState extends State<MenuPage> {
   @override
   void initState() {
     super.initState();
+    fetchPlaces();
   }
 
   Future<void> _loadPrefs() async {
@@ -127,8 +142,13 @@ class _MenuPageState extends State<MenuPage> {
       MapScreen(
         latitude: _newLatitude,
         longitude: _newLongitude,
+        places: _places,
       ),
-      VisitedPage(),
+      VisitedPage(
+        places: _places,
+        latitude: _newLatitude,
+        longitude: _newLongitude,
+      ),
       ProfilePage(),
     ];
 
