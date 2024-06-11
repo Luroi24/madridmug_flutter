@@ -76,7 +76,7 @@ class ReviewTile extends StatelessWidget {
                         children: [
                       Container(
                         margin: const EdgeInsets.only(top: 10),
-                        width: 190,
+                        width: 168,
                         // https://pub.dev/packages/flutter_rating_stars
                         child: RatingStars(
                           value: review.rating!.toDouble(),
@@ -91,13 +91,13 @@ class ReviewTile extends StatelessWidget {
                               color: Colors.white,
                               fontWeight: FontWeight.w400,
                               fontStyle: FontStyle.normal,
-                              fontSize: 12.0),
+                              fontSize: 10.0),
                           valueLabelRadius: 10,
                           maxValue: 5,
                           starSpacing: 2,
                           maxValueVisibility: true,
                           valueLabelVisibility: true,
-                          animationDuration: Duration(milliseconds: 2000),
+                          animationDuration: Duration(milliseconds: 3000),
                           valueLabelPadding:
                           const EdgeInsets.symmetric(vertical: 1, horizontal: 8),
                           valueLabelMargin: const EdgeInsets.only(right: 8),
@@ -109,12 +109,13 @@ class ReviewTile extends StatelessWidget {
                       ),
                       Container(
                         margin: const EdgeInsets.only(top: 10, bottom: 10),
-                        width: 190,
+                        width: 160,
                         child: Text(
                     review.description.toString(),
                     maxLines: 6,
                     style: TextStyle(
                       overflow: TextOverflow.ellipsis,
+                      fontSize: 12.0
                     ),
                           textAlign: TextAlign.justify,
                   ),

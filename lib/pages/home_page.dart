@@ -118,7 +118,10 @@ class _HomePageState extends State<HomePage> {
                               widget.streetName,
                               style: TextStyle(
                                   fontWeight: FontWeight.w600,
-                                  fontSize: 24),
+                                  fontSize: 24,
+                                  overflow: TextOverflow.ellipsis,
+                              ),
+                              maxLines: 2,
                             ),
                           )),
                     ],
@@ -127,17 +130,25 @@ class _HomePageState extends State<HomePage> {
                 Expanded(
                     flex: 1,
                     child: Padding(
-                      padding: const EdgeInsets.only(left: 10),
+                      padding: const EdgeInsets.only(left: 10,top: 10),
                       child: Row(
+
                         children: [
                           Icon(
                             Icons.location_on,
                             color: Color(0XFF606060),
                           ),
-                          Text(
+                          Container(
+                            constraints: const BoxConstraints(maxWidth: 80),
+                          child: Text(
                             widget.streetName,
-                            style: TextStyle(color: Color(0xFF606060)),
-                            overflow: TextOverflow.ellipsis,
+                            style: TextStyle(
+                                color: Color(0xFF606060),
+                              fontSize: 13,
+                              overflow: TextOverflow.fade,
+                            ),
+                            //maxLines: 2,
+                          ),
                           ),
                         ],
                       ),
