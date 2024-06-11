@@ -39,6 +39,28 @@ class Review{
     return data;
   }
 
+
+  Future<List<Review>> retrieveDataById(int idPlace) async {
+    List<Review> data = [];
+    final retrievedData = await db.collection("reviews").where("placeID", isEqualTo: idPlace).get().then((event){
+      for (var doc in event.docs) {
+        var queryElement = doc.data();
+        data.add(Review(queryElement["description"],queryElement["placeID"],queryElement["userName"],queryElement["userID"],queryElement["rating"]));
+        var w = queryElement.containsKey("userName");
+        //print(test["userName"]);
+        queryElement.forEach((key, value){
+          // print(" $key -> $value");
+        });
+        //print("-----------------------------");
+      }
+
+    });
+    //print(data.length);
+    return data;
+  }
+
+
+
   void addReview(){
 
   }
