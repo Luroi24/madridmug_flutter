@@ -2,6 +2,7 @@
 
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:madridmug_flutter/controllers/place.dart';
 import 'package:madridmug_flutter/controllers/place_test.dart';
 
@@ -113,20 +114,23 @@ class _LeaveReviewState extends State<LeaveReview> {
               flex: 2,
               child: SingleChildScrollView(
                   scrollDirection: Axis.vertical,
-                  child: Text(
-                    widget.place.description!,
-                    textAlign: TextAlign.justify,
+                  child: Container(
+                    alignment: Alignment.topLeft,
+                    child: Text(
+                      widget.place.description!,
+                      textAlign: TextAlign.justify,
+                    ),
                   ))),
           // Reviews title & View on map button
           Expanded(
             flex: 1,
             child: Container(
-              alignment: Alignment.centerLeft,
+              alignment: Alignment.center,
               margin: EdgeInsets.symmetric(vertical: 5),
               child: Container(
-                alignment: Alignment.centerLeft,
+                alignment: Alignment.center,
                 child: Text(
-                  "Reviews",
+                  "Leave your review here!",
                   style: TextStyle(fontSize: 18, fontWeight: FontWeight.w500),
                 ),
               ),
@@ -135,33 +139,84 @@ class _LeaveReviewState extends State<LeaveReview> {
           // Reviews
           Expanded(
               flex: 4,
-              child: ListView.builder(
-                  padding: EdgeInsets.symmetric(vertical: 10),
-                  itemCount: reviews.length,
+              child: Align(
+                alignment: Alignment.topLeft,
+                child: SingleChildScrollView(
                   scrollDirection: Axis.vertical,
-                  itemBuilder: (context,index){
-                    Review review1 = Review(
-                      reviews[index].description.toString(),
-                      reviews[index].idPlace!.toInt(),
-                      reviews[index].userName.toString(),
-                      reviews[index].userID.toString(),
-                      reviews[index].rating!.toDouble()
-                    );
-                    userData = data[reviews[index]] ?? new User("1zZN5372jIRzwZCKyEfNGIM8weQ2","Mexico","https://scontent-mad1-1.xx.fbcdn.net/v/t39.30808-6/440053274_827597302719647_1588826766469346134_n.jpg?_nc_cat=106&ccb=1-7&_nc_sid=5f2048&_nc_ohc=1f4b40E9lUcQ7kNvgHwKJ-o&_nc_ht=scontent-mad1-1.xx&oh=00_AYC2xOdMLnS8qvV4PIo4_z5rIoGfwKa2gwBn9MMlJKiHNw&oe=666D93B2");
-                    return GestureDetector(
-                      onTap: () {
-
-                      },
-                      child: ReviewTile(
-                        review: review1,
-                        user: userData,
+                  child: Column(
+                    children: [
+                      Container(
+                        alignment: Alignment.topLeft,
+                        margin: EdgeInsets.only(bottom: 20),
+                        height: 100,
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.all(Radius.circular(12)),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.grey.withOpacity(0.3),
+                              blurRadius: 4,
+                              offset: Offset(4, 8), // changes position of shadow
+                            ),
+                          ],
+                        ),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Expanded(
+                              flex: 1,
+                              child: Container(
+                                alignment: Alignment.center,
+                                margin: const EdgeInsets.symmetric(vertical:5),
+                                child: RatingBar(
+                                  direction: Axis.horizontal,
+                                  allowHalfRating: true,
+                                  itemCount: 5,
+                                  itemSize: 36,
+                                  glowColor: Color(0x99F8D675),
+                                  ratingWidget: RatingWidget(
+                                      full: const Icon(
+                                        Icons.star_rounded,
+                                        color: Color(0xFFF8D675),
+                                      ),
+                                      half: const Icon(Icons.star_half_rounded,
+                                          color: Color(0xFFF8D675)),
+                                      empty: const Icon(Icons.star_border_rounded,
+                                          color: Color(0xFFD9D9D9))),
+                                  onRatingUpdate: (rating) {
+                                    print(rating);
+                                  }),
+                              ),
+                            ),
+                            Expanded(
+                              flex: 2,
+                              child: Container(
+                                margin: const EdgeInsets.symmetric(vertical: 5, horizontal: 20),
+                                child: TextField(
+                                  style: TextStyle(fontSize: 14),
+                                  decoration: InputDecoration(
+                                    hintText: 'Make sure you roast this coffee!',
+                                  ),
+                                ),
+                              ),),
+                          ],
+                        ),
                       ),
-                    );
-
-                  }
-
-
-              )
+                      Container(
+                        alignment: Alignment.centerRight,
+                        height: 50,
+                        child: FloatingActionButton(
+                          onPressed: () {
+                            print("jijijija");
+                            Navigator.pop(context);
+                          },
+                          child: Icon(Icons.send_rounded, color: Colors.amber.shade700,),
+                        ),
+                      )
+                    ],
+                  ),
+                ),
+              ),
           ),
         ],
       ),

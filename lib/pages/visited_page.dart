@@ -6,6 +6,7 @@ import 'package:intl/intl.dart';
 import 'package:madridmug_flutter/components.dart/reviewed_tile.dart';
 import 'package:madridmug_flutter/components.dart/to_review_tile.dart';
 import 'package:madridmug_flutter/controllers/place.dart';
+import 'package:madridmug_flutter/pages/leave_review_page.dart';
 import 'package:madridmug_flutter/pages/place_details.dart';
 import 'package:path_provider/path_provider.dart';
 import '../db/database_helper.dart';
@@ -111,7 +112,7 @@ class _VisitedPageState extends State<VisitedPage> {
                   onTap: () {
                     Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (context) => PlaceDetails(place: placesToRate.toList()[index], latitude: widget.latitude, longitude: widget.longitude),));
+                      MaterialPageRoute(builder: (context) => LeaveReview(place: placesToRate.toList()[index], latitude: widget.latitude, longitude: widget.longitude),));
                   },
                   child: ToReviewTile(place: placesToRate.toList()[index],));
               },

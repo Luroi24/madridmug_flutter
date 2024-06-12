@@ -142,6 +142,7 @@ class _HomePageState extends State<HomePage> {
                             constraints: const BoxConstraints(maxWidth: 80),
                           child: Text(
                             widget.streetName,
+                            maxLines: 1,
                             style: TextStyle(
                                 color: Color(0xFF606060),
                               fontSize: 13,
