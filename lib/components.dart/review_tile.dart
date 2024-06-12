@@ -106,7 +106,7 @@ class ReviewTile extends StatelessWidget {
                             starColor: Colors.yellow,
                           )),
                       Container(
-                        margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 10),
+                        margin: const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
                         alignment: Alignment.topLeft,
                         child: Text(
                           review.description.toString(),
