@@ -105,12 +105,12 @@ class ReviewTile extends StatelessWidget {
                       ],
                     ),
                     Container(
-                      margin: const EdgeInsets.only(top: 10, bottom: 10),
-                      width: 160,
+                      margin: const EdgeInsets.only(top: 8, bottom: 5, left: 8),
+                      width: 200,
                       child: Text(
                         review.description.toString(),
-                        maxLines: 6,
-                        style: TextStyle(
+                        maxLines: 3,
+                        style: const TextStyle(
                             overflow: TextOverflow.ellipsis, fontSize: 12.0),
                         textAlign: TextAlign.justify,
                       ),

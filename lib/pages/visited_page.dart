@@ -8,17 +8,20 @@ import 'package:madridmug_flutter/components.dart/to_review_tile.dart';
 import 'package:madridmug_flutter/controllers/place.dart';
 import 'package:madridmug_flutter/pages/place_details.dart';
 import 'package:path_provider/path_provider.dart';
+import '../controllers/review.dart';
 import '../db/database_helper.dart';
 
 class VisitedPage extends StatefulWidget {
   final List<Place> places;
   final double latitude;
   final double longitude;
+  final String userID;
   const VisitedPage({
     super.key,
     required this.places,
     required this.latitude,
     required this.longitude,
+    required this.userID
   });
 
   @override
@@ -29,14 +32,42 @@ class _VisitedPageState extends State<VisitedPage> {
   List<List<String>> _coordinates = [];
   List<List<String>> _dbCoordinates = [];
   Set<Place> placesToRate = {};
-
-
+  late List<Review> userReviews = [];
+  late String userID = "";
+  late Map<int,String> temp = {};
   @override
   void initState() {
     super.initState();
+    fetchUserID();
     _loadCoordinates();
     _loadDbCoordinates();
   }
+
+  Future<void> fetchUserID() async {
+    try {
+      userID = await widget.userID;
+      setState(() { });
+    } catch (e) {
+      print('Error: $e');
+    }
+    fetchUserReviews();
+    return;
+  }
+
+  Future<void> fetchUserReviews() async {
+    try {
+      print(userID);
+      userReviews = await new Review.NoData().retrieveDataByUserId(widget.userID);
+      for(var i=0;i<widget.places.length;i++){
+        temp[widget.places[i].idPlace!] = widget.places[i].placeName.toString();
+      }
+      setState(() {});
+    } catch (e) {
+      print('Error: $e');
+    }
+    return;
+  }
+
 
   Future<void> _loadCoordinates() async {
     final directory = await getApplicationDocumentsDirectory();
@@ -48,12 +79,12 @@ class _VisitedPageState extends State<VisitedPage> {
   }
 
   Future<void> _loadDbCoordinates() async {
-    List<Map<String, dynamic>> dbCoords = await DatabaseHelper.instance.getCoordinates(); // Corrected
+    List<Map<String, dynamic>> dbCoords = await DatabaseHelper.instance.getCoordinates(widget.userID); // Corrected
     setState(() {
       _dbCoordinates = dbCoords.map((c) => [
         c['timestamp'].toString(), // Corrected
         c['latitude'].toString(), // Corrected
-        c['longitude'].toString() // Corrected
+        c['longitude'].toString(), // Corrected
       ]).toList();
     });
     availableToRate();
@@ -138,10 +169,10 @@ class _VisitedPageState extends State<VisitedPage> {
             height: 250,
             margin: const EdgeInsets.only(bottom: 50),
             child: ListView.builder(
-              itemCount: 4,
+              itemCount: userReviews.length,
               scrollDirection: Axis.vertical,
               itemBuilder: (context, index) {
-                return const ReviewdTile();
+                return ReviewdTile(review: userReviews[index], placesNames: temp);
               },
             ),
           ),
@@ -204,7 +235,7 @@ class _VisitedPageState extends State<VisitedPage> {
 
 
   void _loadDbCoordinatesAndUpdate() async {
-    List<Map<String, dynamic>> dbCoords = await DatabaseHelper.instance.getCoordinates();
+    List<Map<String, dynamic>> dbCoords = await DatabaseHelper.instance.getCoordinates(widget.userID);
     setState(() {
       _dbCoordinates = dbCoords.map((c) => [
         c['timestamp'].toString(),

@@ -1,5 +1,6 @@
 // ignore_for_file: prefer_const_constructors
 
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
 import 'package:madridmug_flutter/pages/counter_page.dart';
@@ -7,6 +8,7 @@ import 'package:madridmug_flutter/pages/menu_page.dart';
 import 'package:madridmug_flutter/pages/todo_page.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:madridmug_flutter/pages/welcome_page.dart';
+import 'package:madridmug_flutter/controllers/user.dart' as User1;
 import 'firebase_options.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:madridmug_flutter/pages/login_screen.dart';
@@ -17,9 +19,10 @@ Future<void> test() async {
     options: DefaultFirebaseOptions.currentPlatform,
   );
 
-  FirebaseAuth.instance.authStateChanges().listen((User? user) {
+  FirebaseAuth.instance.authStateChanges().listen((User? user)  {
     if (user != null) {
       print(user.uid);
+      User1.User.NoData().addUser(user.uid);
       logger.d(user.uid);
     } else {
       logger.d("No hay usuario actual");
