@@ -58,8 +58,8 @@ MadridMug is the mobile application any coffee lover should have installed on th
 
 
 ## Demo Video
-<a href="https://www.youtube.com/watch?v=HYwL3iM5Ud8">
-  Click here to watch the demo video!
+<a href="https://youtu.be/nHNIZv6FEs8">
+  Click here to watch the demo video! (https://youtu.be/nHNIZv6FEs8)
 </a>
 
 ## Features
