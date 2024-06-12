@@ -39,7 +39,7 @@ MadridMug is the mobile application any coffee lover should have installed on th
       <p align="center">The profile menu option shows the users shared preferences, for instance, their username, email, country, and picture</p>
     </td>
     <td>
-      <img src="https://github.com/Luroi24/madridmug_flutter/assets/78554741/dec71faa-21e5-4d3d-9232-42b69a03776d" width="300" height="600" />
+      <img src="https://github.com/Luroi24/madridmug_flutter/assets/78554741/3abf50c5-824e-49b5-a5e0-951c0c37c45f" width="300" height="600" />
       <p align="center">The visited page where the user can see the cafeterias they have been nearby and can choose to leave a review. They can also see the cafeterias they have already left a review on.</p>
     </td>
   </tr>
