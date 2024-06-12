@@ -35,7 +35,7 @@ MadridMug is the mobile application any coffee lover should have installed on th
   </tr>
   <tr>
     <td>
-      <img src="https://github.com/Luroi24/madridmug_flutter/assets/78554741/9e1cbcb7-2931-4ee8-83dd-1dad04aca586" width="300" height="600" />
+      <img src="https://github.com/Luroi24/madridmug_flutter/assets/78554741/772fe8df-e05b-4523-a232-0daf8d44504d" width="300" height="600" />
       <p align="center">The profile menu option shows the users shared preferences, for instance, their username, email, country, and picture</p>
     </td>
     <td>
