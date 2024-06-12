@@ -145,7 +145,7 @@ class _HomePageState extends State<HomePage> {
                             style: TextStyle(
                                 color: Color(0xFF606060),
                               fontSize: 13,
-                              overflow: TextOverflow.fade,
+                              overflow: TextOverflow.ellipsis,
                             ),
                             //maxLines: 2,
                           ),

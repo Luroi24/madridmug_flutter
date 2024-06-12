@@ -52,7 +52,7 @@ class WelcomePage extends StatelessWidget {
                       context,
                       MaterialPageRoute(
                         builder: (context) =>
-                          LoginScreen(),
+                          SignUpScreen(),
                       ));
                   },
                   child: Container(
@@ -73,7 +73,7 @@ class WelcomePage extends StatelessWidget {
                       context,
                       MaterialPageRoute(
                         builder: (context) =>
-                          SignUpScreen(),
+                          LoginScreen() ,
                       ));
                   },
                   child: Container(
