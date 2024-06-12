@@ -2,7 +2,7 @@
 
 ## Workspace 
 Github:  
-- Repository: [https://github.com/Luroi24/dESCOMpuestos](https://github.com/Luroi24/madridmug_flutter)  
+- Repository: https://github.com/Luroi24/madridmug_flutter
 - Releases: https://github.com/Luroi24/madridmug_flutter/releases
 
 Workspace: https://upm365.sharepoint.com/sites/dESCOMpuestos/SitePages/Tracking.aspx
