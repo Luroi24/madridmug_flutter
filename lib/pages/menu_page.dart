@@ -163,7 +163,9 @@ class _MenuPageState extends State<MenuPage> {
         longitude: _newLongitude,
         userID: _userID,
       ),
-      ProfilePage(),
+      ProfilePage(
+        userID: _userID,
+      ),
     ];
 
     return Scaffold(

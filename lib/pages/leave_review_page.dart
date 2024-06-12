@@ -6,12 +6,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:madridmug_flutter/controllers/place.dart';
 import 'package:madridmug_flutter/controllers/place_test.dart';
+import 'package:madridmug_flutter/pages/visited_page.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../components.dart/review_tile.dart';
 import '../controllers/review.dart';
 import '../controllers/user.dart';
 import 'package:madridmug_flutter/pages/map_screen.dart';
+
+import 'menu_page.dart';
 
 class LeaveReview extends StatefulWidget {
   Place place;
@@ -37,12 +40,26 @@ class _LeaveReviewState extends State<LeaveReview> {
   final myController = TextEditingController();
   late String userName = "";
   late double placeRat = 0.0;
+  late List<Place> _places = [];
   @override
   void initState() {
     fetchReviews(widget.place.idPlace!);
+    fetchPlaces();
     //print(widget.place.idPlace!);
     super.initState();
 
+  }
+
+  Future<void> fetchPlaces() async {
+    try {
+      _places = await new Place.NoData().retrieveAllPlaces();
+      _places.sort((a, b) => a.rating!.compareTo(b.rating!));
+      _places = _places.reversed.toList();
+      print("Places: $_places");
+    } catch (e) {
+      print('Error: $e');
+    }
+    return;
   }
 
   Future<void> fetchReviews(int idPlace) async {
@@ -227,7 +244,13 @@ class _LeaveReviewState extends State<LeaveReview> {
                             print("a");
                             var x = new Review(myController.text, widget.place.idPlace!, userName, userData.userID!,placeRat);
                             x.addReview(x);
-                            Navigator.pop(context);
+                            fetchReviews(widget.place.idPlace!);
+                            Navigator.pushReplacement(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => MenuPage(),
+                              ),
+                            );
                           },
                           child: Icon(Icons.send_rounded, color: Colors.amber.shade700,),
                         ),

@@ -7,6 +7,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:firebase_database/firebase_database.dart';
 import '../controllers/review.dart';
 import '../controllers/place.dart';
+import '../controllers/user.dart' as Usuario;
 import 'login_screen.dart';
 
 String _getMoodEmoji(int moodRating) {
@@ -27,28 +28,39 @@ String _getMoodEmoji(int moodRating) {
 }
 
 class ProfilePage extends StatefulWidget {
-  const ProfilePage({super.key});
+  final String userID;
+  const ProfilePage({super.key, required this.userID});
 
   @override
   State<ProfilePage> createState() => _ProfilePageState();
+
 }
 
+
 class _ProfilePageState extends State<ProfilePage> {
+  late Usuario.User usuario;
+  late String userImgLnk = "";
+  @override
+  void initState() {
+    _fetchUserImage();
+    //print(widget.place.idPlace!);
+    super.initState();
+
+  }
   Map<String, TextEditingController> controllers = {};
   final TextEditingController _commentController =
       TextEditingController(); // Form to insert data
   final FirebaseAuth _auth = FirebaseAuth.instance;
   int _moodRating = 0;
 
+
+  Future<void> _fetchUserImage() async{
+    usuario = await new Usuario.User.NoData().retrieveUserData(widget.userID);
+    userImgLnk = usuario.profileURL!;
+  }
+
   Future<Map<String, dynamic>> _fetchAllPreferences() async {
-    //var reviews = new Review.NoData();
-    //var reviewsList = await  reviews.retrieveAllData();
-    //print(reviewsList.length);
-
-    //var places = new Place.NoData();
-    //var placesList = await places.retrieveAllPlaces();
-    //print(placesList.length);
-
+    usuario = await new Usuario.User.NoData().retrieveUserData(widget.userID);
     final prefs = await SharedPreferences.getInstance();
     final keys = prefs.getKeys();
     final Map<String, dynamic> prefsMap = {};
@@ -98,7 +110,7 @@ class _ProfilePageState extends State<ProfilePage> {
                             width: 100,
                             decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(100),
-                              image: DecorationImage(image: AssetImage("lib/images/test2.jpeg"), fit: BoxFit.cover),
+                              image: DecorationImage(image: NetworkImage(userImgLnk), fit: BoxFit.cover),
                             ),
                           ),
                         ),
@@ -125,9 +137,12 @@ class _ProfilePageState extends State<ProfilePage> {
                                     onSubmitted: (value) {
                                       _updatePreference(entry.key, value);
                                     },
+                                    onChanged:(value){
+                                      _updatePreference(entry.key, value);
+                                    } ,
                                   ),
                                 )
-                              ],
+                              ]
                             )
                             /*ListTile(
                             title: Text("${entry.key}"),
