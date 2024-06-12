@@ -13,8 +13,10 @@ import 'package:geolocator/geolocator.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:geocoding/geocoding.dart';
-
+import '../controllers/user.dart';
 import '../db/database_helper.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+
 
 class MenuPage extends StatefulWidget {
   MenuPage({super.key});
@@ -30,6 +32,7 @@ class _MenuPageState extends State<MenuPage> {
   final _ageController = TextEditingController();
   final logger = Logger();
   late List<Place> _places = [];
+  late String _userID;
 
   double _newLatitude = 40.407447684737356;
   double _newLongitude = -3.6152570335947654;
@@ -41,6 +44,15 @@ class _MenuPageState extends State<MenuPage> {
       _places.sort((a, b) => a.rating!.compareTo(b.rating!));
       _places = _places.reversed.toList();
       print("Places: $_places");
+    } catch (e) {
+      print('Error: $e');
+    }
+    return;
+  }
+
+  Future<void> fetchUserID() async {
+    try {
+      _userID = FirebaseAuth.instance.currentUser?.uid ?? "1zZN5372jIRzwZCKyEfNGIM8weQ2";
     } catch (e) {
       print('Error: $e');
     }
@@ -76,6 +88,7 @@ class _MenuPageState extends State<MenuPage> {
   void initState() {
     super.initState();
     fetchPlaces();
+    fetchUserID();
   }
 
   Future<void> _loadPrefs() async {
@@ -148,6 +161,7 @@ class _MenuPageState extends State<MenuPage> {
         places: _places,
         latitude: _newLatitude,
         longitude: _newLongitude,
+        userID: _userID,
       ),
       ProfilePage(),
     ];
@@ -248,7 +262,7 @@ class _MenuPageState extends State<MenuPage> {
     _positionStreamSubscription =
         Geolocator.getPositionStream(locationSettings: locationSettings).listen(
       (Position position) {
-        db.insertCoordinate(position);
+        db.insertCoordinate(position,_userID);
       },
     );
   }
@@ -268,7 +282,7 @@ class _MenuPageState extends State<MenuPage> {
       logger.d("Lugares encontrados: ${placemarks[0].street}");
       changeStreet(placemarks[0].street);
       await file.writeAsString(
-          '$timestamp;${placemarks[0].street};${position.latitude};${position.longitude}\n',
+          '$timestamp;${placemarks[0].street};${position.latitude};${position.longitude};${_userID}\n',
           mode: FileMode.append);
     } on Exception catch (_) {
       rethrow;

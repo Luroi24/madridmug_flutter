@@ -20,25 +20,31 @@ class DatabaseHelper {
  id INTEGER PRIMARY KEY AUTOINCREMENT,
  timestamp TEXT,
  latitude REAL,
- longitude REAL
+ longitude REAL,
+ userID TEXT
  )
  ''');
       },
-      version: 1,
+      onUpgrade: (db, oldV, newV) async{
+        if(oldV < newV){ await db.execute('''ALTER TABLE coordinates ADD COLUMN userID TEXT''');}
+      },
+      version: 3,
     );
   }
-  Future<void> insertCoordinate(Position position) async {
+  Future<void> insertCoordinate(Position position, String userID) async {
     final db = await database;
     await db.insert('coordinates', {
       'timestamp': DateTime.now().millisecondsSinceEpoch.toString(),
       'latitude': position.latitude,
-      'longitude': position.longitude
+      'longitude': position.longitude,
+      'userID': userID
     });
   }
 
-  Future<List<Map<String, dynamic>>> getCoordinates() async {
+  Future<List<Map<String, dynamic>>> getCoordinates(String userID) async {
     final db = await database;
-    return await db.query('coordinates');
+    const String sql = "SELECT * FROM coordinates WHERE userID=?";
+    return await db.rawQuery(sql,[userID]);
   }
 
   Future<void> updateCoordinate(String timestamp, String newLat, String newLong) async {

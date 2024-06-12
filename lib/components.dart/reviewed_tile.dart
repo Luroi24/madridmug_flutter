@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 
+import '../controllers/review.dart';
+
 class ReviewdTile extends StatelessWidget {
-  const ReviewdTile({super.key});
+  final Review review;
+  final Map<int,String> placesNames;
+  const ReviewdTile({super.key, required this.review, required this.placesNames});
 
   @override
   Widget build(BuildContext context) {
@@ -27,13 +31,15 @@ class ReviewdTile extends StatelessWidget {
             flex: 1,
             child: Container(
               alignment: Alignment.center,
-              child: const Text(
-                "Cafeteria number X",
+              child: Text(
+                placesNames[review.idPlace!.toInt()]!,
                 overflow: TextOverflow.ellipsis,
                 ))),
           Expanded(
             flex: 1,
             child: RatingBar(
+               initialRating: review.rating!.toDouble(),
+                ignoreGestures:  true,
                 direction: Axis.horizontal,
                 allowHalfRating: true,
                 itemCount: 5,
