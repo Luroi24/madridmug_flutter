@@ -93,16 +93,30 @@ class _VisitedPageState extends State<VisitedPage> {
   void availableToRate(){
     Set<Place> temp = {};
     print("Test: ${_dbCoordinates.length}");
+    for(var i=0;i<_dbCoordinates.length;i++){
+      for(var j=0;j<_dbCoordinates[i].length;j++){
+        var temp = _dbCoordinates[i];
+        print(temp[j]);
+      }
+    }
     print("Test2: ${widget.places.length}");
     for(var coordinate in _dbCoordinates){
       for (var place in widget.places) {
         // TODO: Cambiar a valores más pequeños (las sumas que se hacen a las coordenadas de los lugares)
+        var x = sqrt( pow(double.parse(coordinate[1])-place.coordinates[0],2) +
+            pow(double.parse(coordinate[2])-place.coordinates[1],2) );
+        print(x);
+        if(x <= 0.5){
+          temp.add(place);
+        }
+        /*s
         if(double.parse(coordinate[1]) <= (place.coordinates[0]+1) && 
             double.parse(coordinate[1]) >= (place.coordinates[0]-1) &&
             double.parse(coordinate[2]) <= (place.coordinates[1]+1) &&
             double.parse(coordinate[2]) >= (place.coordinates[1]-1)){
           temp.add(place);
         }
+        */
       }
     }
     print("places: $temp");

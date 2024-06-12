@@ -78,8 +78,14 @@ class Review{
     return data;
   }
 
-  void addReview(){
-
+  Future<void> addReview(Review rev) async{
+      await db.collection("reviews").add({
+        "description": rev.description,
+        "placeID": rev.idPlace,
+        "rating": rev.rating,
+        "userID": rev.userID,
+        "userName": rev.userName
+      });
   }
 
   void updateReview(){

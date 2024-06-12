@@ -1,10 +1,12 @@
 // ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
 
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:firebase_auth/firebase_auth.dart' as User1;
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:madridmug_flutter/controllers/place.dart';
 import 'package:madridmug_flutter/controllers/place_test.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../components.dart/review_tile.dart';
 import '../controllers/review.dart';
@@ -16,6 +18,7 @@ class LeaveReview extends StatefulWidget {
   final double latitude;
   final double longitude;
   Review? review;
+
   LeaveReview({
     super.key,
     required this.place,
@@ -30,6 +33,10 @@ class _LeaveReviewState extends State<LeaveReview> {
   late List<Review> reviews = [];
   User userData = new User.NoData();
   final Map<Review,User> data = {};
+  late User currentUser;
+  final myController = TextEditingController();
+  late String userName = "";
+  late double placeRat = 0.0;
   @override
   void initState() {
     fetchReviews(widget.place.idPlace!);
@@ -44,6 +51,8 @@ class _LeaveReviewState extends State<LeaveReview> {
       for(var i=0;i<reviews.length;i++){
         data[reviews[i]] = await fetchUserData(reviews[i].userID.toString());
       }
+      currentUser = await fetchUserData(User1.FirebaseAuth.instance.currentUser!.uid);
+
       //print(reviews.length);
     } catch (e) {
       print('Error: $e');
@@ -52,10 +61,16 @@ class _LeaveReviewState extends State<LeaveReview> {
     return;
   }
 
+  Future<dynamic> getSharedPreferences(String key) async {
+    final prefs = await SharedPreferences.getInstance();
+    return prefs.getString(key);
+  }
+
   Future<User> fetchUserData(String userID) async {
     try {
       userData = await new User.NoData().retrieveUserData(userID);
-      //print(reviews.length);
+      userName = await getSharedPreferences("username");
+      print("Username $userName");
     } catch (e) {
       print('Error: $e');
     }
@@ -185,6 +200,7 @@ class _LeaveReviewState extends State<LeaveReview> {
                                           color: Color(0xFFD9D9D9))),
                                   onRatingUpdate: (rating) {
                                     print(rating);
+                                    placeRat = rating;
                                   }),
                               ),
                             ),
@@ -197,6 +213,7 @@ class _LeaveReviewState extends State<LeaveReview> {
                                   decoration: InputDecoration(
                                     hintText: 'Make sure you roast this coffee!',
                                   ),
+                                  controller: myController,
                                 ),
                               ),),
                           ],
@@ -207,7 +224,9 @@ class _LeaveReviewState extends State<LeaveReview> {
                         height: 50,
                         child: FloatingActionButton(
                           onPressed: () {
-                            print("jijijija");
+                            print("a");
+                            var x = new Review(myController.text, widget.place.idPlace!, userName, userData.userID!,placeRat);
+                            x.addReview(x);
                             Navigator.pop(context);
                           },
                           child: Icon(Icons.send_rounded, color: Colors.amber.shade700,),
