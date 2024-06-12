@@ -1,5 +1,4 @@
-# MadridMug (by dESCOMpuestos)
-![image](https://github.com/Luroi24/madridmug_flutter/assets/78554741/095a3595-0383-4f1e-91ee-40b22bb10a8b)
+# <img src="https://github.com/Luroi24/madridmug_flutter/assets/78554741/095a3595-0383-4f1e-91ee-40b22bb10a8b" width="100" height="100" /> MadridMug (by dESCOMpuestos)
 
 ## Workspace 
 Github:  
