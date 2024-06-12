@@ -1,6 +1,8 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:madridmug_flutter/pages/menu_page.dart';
+import 'package:madridmug_flutter/controllers/user.dart' as User1;
+
 class SignUpScreen extends StatefulWidget {
   @override
   _SignUpScreen createState() => _SignUpScreen();
@@ -17,6 +19,7 @@ class _SignUpScreen extends State<SignUpScreen> {
       )).user;
       if (user != null) {
         print('Register successful!');
+        User1.User.NoData().addUser(user.uid);
         Navigator.push(
           context,
           MaterialPageRoute(builder: (context) => MenuPage()),
